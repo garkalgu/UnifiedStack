@@ -5,8 +5,8 @@ import inspect
 import os
 import sys
 
-root_path = os.path.abspath(r"../..")
-sys.path.append(root_path)
+#root_path = os.path.abspath(r"../../../..")
+#sys.path.append(root_path)
 
 from codebase.UnifiedStack.config.Config_Parser import Config
 
