@@ -57,6 +57,7 @@ class Cobbler_Integrator():
         cobbler_preInstall.enable_repos(console,redhat_username,redhat_password,redhat_pool)
         cobbler_preInstall.install_prerequistes()  
         cobbler_preInstall.disable_SELinux(console)
+	shell_command("reboot")
         #cobbler_preInstall.enable_networking(console)
         #cobbler_preInstall.add_name_server(console)
 
