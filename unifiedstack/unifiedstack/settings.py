@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'logger',
     'configurator',
+    'codebase',
 )
 
 MIDDLEWARE_CLASSES = (

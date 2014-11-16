@@ -6,7 +6,7 @@ import shutil
 root_path = os.path.abspath(r"../..")
 sys.path.append(root_path)
 
-from UnifiedStack.config.Config_Parser import Config
+from codebase.UnifiedStack.config.Config_Parser import Config
 from general_utils import shell_command
 
 class Cobbler_Integrator():
@@ -86,8 +86,8 @@ class Cobbler_Integrator():
 		continue
             towrite.append(line)
             if '%post' in line:
-		towrite.append(
-		    "subscription-manager config --server.proxy_hostname=" + http_proxy_ip + " --server.proxy_port=80 \n")
+		#towrite.append(
+		#    "subscription-manager config --server.proxy_hostname=" + http_proxy_ip + " --server.proxy_port=80 \n")
                 towrite.append(
                     "subscription-manager register --username=" +
                     redhat_username +
@@ -97,9 +97,10 @@ class Cobbler_Integrator():
                     "\nsubscription-manager subscribe --pool=" +
                     redhat_pool + "\n")
 		#TO DO REMOVE HARD CODING
-		towrite.append("/usr/bin/echo 'export http_proxy=http://" + http_proxy_ip + ":80' >> /etc/bashrc\n")
-                towrite.append("/usr/bin/echo 'export https_proxy=https://" + https_proxy_ip + ":" + https_port + "' >> /etc/bashrc\n")
-                towrite.append("/usr/bin/echo \"export no_proxy=`echo " + get_no_proxy_string(cobbler_subnet,cobbler_netmask) + " | sed 's/ /,/g'`\" >> /etc/bashrc\n")
+	        
+		#towrite.append("/usr/bin/echo 'export http_proxy=http://" + http_proxy_ip + ":80' >> /etc/bashrc\n")
+                #towrite.append("/usr/bin/echo 'export https_proxy=https://" + https_proxy_ip + ":" + https_port + "' >> /etc/bashrc\n")
+                #towrite.append("/usr/bin/echo \"export no_proxy=`echo " + get_no_proxy_string(cobbler_subnet,cobbler_netmask) + " | sed 's/ /,/g'`\" >> /etc/bashrc\n")
                 #towrite.append("/usr/bin/echo 'printf -v no_proxy '%s,' 19.19.{0..255}.{0..255}' >> /etc/bashrc\n")
                 #towrite.append("/usr/bin/echo 'export no_proxy=${no_proxy%,}' >> /etc/bashrc\n")
                 towrite.append("/usr/bin/echo 'nameserver " + nameserver + "' >> /etc/resolv.conf\n") 
@@ -122,7 +123,8 @@ class Cobbler_Integrator():
 	shell_command("cobbler sync")
 	time.sleep(5)
 	shell_command("systemctl restart xinetd.service")
-	result=handle.power_cycle_systems(systems=systems)
+	#result=handle.power_cycle_systems(systems=systems)
+	#call fi module for power cycle
 	time.sleep(400)
 	handle.disable_netboot_systems(systems=systems)  
         console.cprint_progress_bar("Task Completed",100)

@@ -19,8 +19,8 @@ import inspect
 
 class FIConfig:
     config = ConfigParser.ConfigParser()
-    config.read(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) + '\..\config\unified_stack.cfg')
-
+    config.read(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) + '/../data_static/unified_stack.cfg')
+    #config.read("//root/UnifiedStack/UnifiedStack/fi/unified_stack.cfg")
     
     @staticmethod
     def get_field(field):

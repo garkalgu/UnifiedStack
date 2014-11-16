@@ -14,7 +14,7 @@ from configurator.models import DeviceSetting
 from configurator.serializers import DeviceSettingSerializer
 from logger.serializers import LogSerializer
 from logger.models import ConsoleLog
-from codebase.UnifiedStack.sample import Integrator
+from codebase.UnifiedStack.integrator import Integrator
 import ConfigParser
 import os
 import inspect
@@ -192,7 +192,7 @@ def server_binding_post(request):
     file_containing_dir=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     with open(file_containing_dir + '../codebase/UnifiedStack/data_static/unified_stack2.cfg' ,'wb') as configfile:
         unified_config.write(configfile) 
-    Integrator.Integrator().configure_unifiedstack()
+    Integrator().configure_unifiedstack()
     return HttpResponse(status=201)
      
 
