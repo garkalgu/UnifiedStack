@@ -6,7 +6,7 @@ import shutil
 root_path = os.path.abspath(r"../..")
 sys.path.append(root_path)
 
-from UnifiedStack.config.Config_Parser import Config
+from codebase.UnifiedStack.config.Config_Parser import Config
 from general_utils import shell_command
 
 class Cobbler_Integrator():
