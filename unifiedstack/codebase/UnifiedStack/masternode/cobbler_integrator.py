@@ -125,7 +125,10 @@ class Cobbler_Integrator():
 	shell_command("cobbler sync")
 	time.sleep(5)
 	shell_command("systemctl restart xinetd.service")
-	result=handle.power_cycle_systems(systems=systems)
+	#If C-series the this 
+	#result=handle.power_cycle_systems(systems=systems)
+	#else if B-series 
+	#call fi- module to power cycle
 	time.sleep(400)
 	handle.disable_netboot_systems(systems=systems)  
         console.cprint_progress_bar("Task Completed",100)
