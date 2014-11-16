@@ -45,10 +45,10 @@ class Build_Server():
             profile = system.profile_name
 	    proxy=system.http_proxy_ip + '80'
             #power_id= system.power_id
-            power_type=system.power_type
-            power_user=system.power_user
-            power_pass=system.power_password
-            power_addr=system.power_address
+            power_type=None #system.power_type
+            power_user=None #system.power_user
+            power_pass=None #system.power_password
+            power_addr=None #system.power_address
             name = '' + hostname + "-" + purpose
 	    
             handle = syst.New_system(name=name,
