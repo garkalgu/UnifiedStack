@@ -34,7 +34,7 @@ DeviceSetting(device=device, device_type_setting=setting, value="buildserver").s
 setting = DeviceTypeSetting.objects.get(dtype=device.dtype,  standard_label__startswith='cobbler-web(')
 DeviceSetting(device=device, device_type_setting=setting, value="cobbler; cobbler").save()
 setting = DeviceTypeSetting.objects.get(dtype=device.dtype,  standard_label__startswith='redhat-info(')
-DeviceSetting(device=device, device_type_setting=setting, value="rahuupad2;iso*help123;8a85f98444de1da50144e5c4aeae67d0").save()
+DeviceSetting(device=device, device_type_setting=setting, value="rahuupad2;iso*help123;8a85f984453e190c014548869b9a79b8").save()
 setting = DeviceTypeSetting.objects.get(dtype=device.dtype,  standard_label__startswith='proxy(http-')
 DeviceSetting(device=device, device_type_setting=setting, value="19.19.0.253;19.19.0.253;80").save()
 
@@ -82,7 +82,7 @@ DeviceSetting(device=device, device_type_setting=setting, value="19.19.0.0").sav
 setting = DeviceTypeSetting.objects.get(dtype=device.dtype,  standard_label__startswith='proxy(http-proxy-')
 DeviceSetting(device=device, device_type_setting=setting, value="19.19.0.253;19.19.0.253;80").save()
 setting = DeviceTypeSetting.objects.get(dtype=device.dtype,  standard_label__startswith='redhat-info(')
-DeviceSetting(device=device, device_type_setting=setting, value="rahuupad2;iso*help123;8a85f98444de1da50144e5c4aeae67d0").save()
+DeviceSetting(device=device, device_type_setting=setting, value="rahuupad2;iso*help123;8a85f984453e190c014548869b9a79b8").save()
 
 print "FI"
 #FI

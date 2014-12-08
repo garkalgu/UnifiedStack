@@ -305,7 +305,9 @@ class Foreman_Integrator():
 		    towrite.append("/usr/bin/echo \"export no_proxy=`echo " + no_proxy_string + " | sed 's/ /,/g'`\" >> /etc/bashrc\n")
 		if self.data_dict['https_proxy_ip']!='':
                     towrite.append("/usr/bin/echo 'export https_proxy=https://" + self.data_dict['https_proxy_ip'] + ":" + self.data_dict['https_port'] + "' >> /etc/bashrc\n")
-                towrite.append("/usr/bin/echo 'nameserver " + self.data_dict['nameserver'] + "' >> /etc/resolv.conf\n") 
+                #for host_name,host_data_dict in self.data_dict['system'].items():
+		#    towrite.append("/usr/bin/echo " + host_data_dict['ip_address'] + " " + host_name + "." + self.data_dict['domain_name'] + " " + host_name + " >> /etc/hosts\n") 
+		towrite.append("/usr/bin/echo 'nameserver " + self.data_dict['nameserver'] + "' >> /etc/resolv.conf\n") 
 		towrite.append("chkconfig NetworkManager stop\n")
                 towrite.append("chkconfig NetworkManager off\n")
                 

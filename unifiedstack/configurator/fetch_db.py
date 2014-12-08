@@ -2,9 +2,9 @@ import os
 import sys
 root_path = os.path.abspath(r"../..")
 sys.path.append(root_path)
-#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "unifiedstack.settings")
-#from django.core.management import execute_from_command_line
-#execute_from_command_line(sys.argv)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "unifiedstack.settings")
+from django.core.management import execute_from_command_line
+execute_from_command_line(sys.argv)
 import django.core.exceptions
 from configurator.models import Device, DeviceTypeSetting, DeviceSetting
 class System:

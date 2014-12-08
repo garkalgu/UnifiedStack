@@ -12,7 +12,7 @@ def configure_cobbler_preboot():
     redhat_username=raw_input("REDHAT_ACOOUNT_USERNAME ?:")
     redhat_password=raw_input("REDHAT_ACOOUNT_PASSWORD ?:")
     print "**" * 10 + "ENTER THE PROXY INFORMAION . ENTER FOR NONE" + "**" * 10
-    redhat_pool="8a85f98444de1da50144e5c4aeae67d0"
+    redhat_pool="8a85f984453e190c014548869abc799a"
     nameserver=""
     console = cli.ConsoleOutput()
     if len(sys.argv)== 1:

@@ -33,7 +33,7 @@ class PackStackConfigurator:
     def setup_packstack_pre_requisites(self):
         shell = shi.ShellInterpretter()
         shell.execute_command(
-            "/usr/bin/yum-config-manager --enable rhel-7-server-openstack-5.0-rpms")
+            '/usr/bin/yum-config-manager --setopt="rhel-7-server-openstack-5.0-rpms.priority=1" --enable rhel-7-server-openstack-5.0-rpms')
 
     def install_packstack(self):
         shell = shi.ShellInterpretter()
@@ -101,7 +101,7 @@ class PackStackConfigurator:
         self.set_packstack_field(
             "general",
             "CONFIG_NTP_SERVERS",
-            "cvf-ntp1")
+            "pool.ntp.org")
 
         # Move networker and compute services to proper nodes	
 	compute_hosts=''
@@ -122,7 +122,7 @@ class PackStackConfigurator:
             network_hosts)
 	self.set_packstack_field(
             "general",
-            "CONFIG_CONTROLLER_HOSTS",
+            "CONFIG_CONTROLLER_HOST",
             controller_host_ip) 
         # Customers will want to set admin keystone password to something sane
         self.set_packstack_field(

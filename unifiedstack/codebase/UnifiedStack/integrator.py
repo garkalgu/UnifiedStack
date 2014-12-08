@@ -24,7 +24,7 @@ sys.path.append(root_path)
 # Hardcoded Values
 username = "root"
 password = "Cisco12345"
-MAX_TRIES = 5
+MAX_TRIES = 30
 #from UnifiedStack.cimc import CIMC_Setup as cimc
 from codebase.UnifiedStack.masternode import cobbler_integrator as cobb
 from codebase.UnifiedStack.masternode import foreman_integrator as fore
@@ -120,6 +120,7 @@ class Integrator:
         shi.ShellInterpretter.set_console(console)
         shell = shi.ShellInterpretter()
         console.cprint_header("UnifiedStack - Installer (Beta 1.0)")      	
+	shell.execute_command("yum install python-devel python-paramiko -y")
 	#FI
 	"""
 	proxy=True
@@ -129,10 +130,10 @@ class Integrator:
 	ficonfig = FI_Configurator.FIConfigurator()
         ficonfig.configure_fi_components()
 	#SWITCH
-        shell.execute_command("yum install python-devel python-paramiko -y")
         import paramiko
         console.cprint_progress_bar("Started Configuration of Switch", 0)
         self.configure_switch(shell, console)
+	
 	#LIFE_CYCLE
 	isCobbler=False
         #Tell the cobbler and Foreman object whether to read the object from databse or from config
@@ -142,13 +143,13 @@ class Integrator:
         else:
 	    foreman_config = fore.Foreman_Integrator(console,data_source="database")
 	    foreman_config.setup_foreman() 
-	
-        #PACKSTACK
-	
+	"""
+        #PACKSTACK	
+	console.cprint_progress_bar("Polling nodes", 0)
 	tries = 0
 	#cobbler_device_list = Device.objects.filter(dtype=DeviceTypeSetting.COBBLER_TYPE)
         while not self.poll_all_nodes(system_list): 
-            time.sleep(10)
+            time.sleep(20)
             if tries < MAX_TRIES:
                 tries += 1
             else:
@@ -156,13 +157,11 @@ class Integrator:
         if not self.poll_all_nodes(system_list):
             console.cprint("Not all systems could boot!!!")
             exit(0)	
-	"""
-        #self.configure_nodes(console,system_list,redhat_username,redhat_password,redhat_pool)
-	
+        self.configure_nodes(console,system_list,redhat_username,redhat_password,redhat_pool)	
 	console.cprint_progress_bar("Started Configuration of Packstack", 0)
         self.configure_packstack(console,compute_host_ip_list,network_host_ip_list,controller_host_ip)	
 	# Configuring CIMC
-	"""
+	"""	
         console.cprint_progress_bar("Started Configuration of CIMC", 0)
         cimc_config = cimc.CIMCConfigurator(console)
         cimc_config.configure_cimc()
@@ -218,33 +217,47 @@ class Integrator:
         return remote_conn_pre
     
     def configure_nodes(self, console,system_list,redhat_username,redhat_password,redhat_pool):
+	global username
+        global password
 	self.setup_ssh_key()	
 	self.ssh_key_exchange(fetch_db.General().get('host-ip-address'), 'root',fetch_db.General().get('host-password'))
-	cobbler_device_list = Device.objects.filter(dtype=DeviceTypeSetting.COBBLER_TYPE)
         for system in system_list:
             # Calling the function to make the ssh connection
-            self.ssh_key_exchange(system.ip_address, username, password)
-            remote_conn_client = self.establish_connection(
+            #self.ssh_key_exchange(system.ip_address, username, password)
+	    self.ssh_key_exchange(system.ip_address,username,password)
+            remote_conn = self.establish_connection(
                         ipaddress=system.ip_address,
                         username=username,
                         password=password)
-	    remote_conn = remote_conn_client.invoke_shell()
-            remote_conn.send(
-                "subscription-manager register --username=" +
-                redhat_username +
-                " --password=" +
-                redhat_password)
-            time.sleep(30)
-            console.cprint("Subscribed a node.")
-            remote_conn.send("subscription-manager attach --pool=" + redhat_pool)
-            time.sleep(30)
-            console.cprint("Attached pool")
-            time.sleep(30)
-            remote_conn.send(
-                "sudo yum-config-manager --enable rhel-7-server-openstack-5.0-rpms")
+	    #remote_conn = remote_conn_client.invoke_shell()
+	    remote_conn.exec_command(
+                '/usr/bin/yum-config-manager --setopt="rhel-7-server-openstack-5.0-rpms.priority=1" --enable rhel-7-server-openstack-5.0-rpms')
+	    remote_conn.exec_command("yum update -y")
+	    while True:
+		still_updating=False
+	        stdin,stdout,stderr=remote_conn.exec_command("ps ax | grep yum")
+	        for line in stdout.readlines():
+		    print line
+		    if "yum update -y" in line:
+			still_updating=True
+			break
+		if still_updating:
+		    time.sleep(10)
+		    continue 
+		else:
+		    break
+	    remote_conn.exec_command(
+                '/usr/bin/yum-config-manager --setopt="rhel-7-server-openstack-5.0-rpms.priority=1" --enable rhel-7-server-openstack-5.0-rpms')
+	    time.sleep(5)
+	    remote_conn.exec_command(
+	        "hostname " + system.hostname)
+	    time.sleep(2)
+	    remote_conn.exec_command(
+		"/usr/bin/echo " + system.hostname + " > /etc/hostname")
+	    if fetch_db.General().get('life-cycle-manager').title()=='Foreman':
+	        remote_conn.exec_command(
+		    "/usr/bin/echo " + system.ip_address + " " + system.hostname + "." + fetch_db.Foreman().get("domain-name") + " " + system.hostname + " >> /etc/hosts\n")
             time.sleep(10)
-            output = remote_conn.recv(5000)
-            console.cprint(output)
 
     def poll_node(self, ipaddress, username, password):
         import paramiko
@@ -264,29 +277,16 @@ class Integrator:
     def poll_all_nodes(self,system_list):
 	global username
 	global password
-        overall_poll_result = True      
+        overall_poll_result = True
         for system in system_list:
             # Calling the function to make the ssh connection
             result = self.establish_connection(
                                 ipaddress=system.ip_address,
                                 username=username,
                                 password=password)
-            overall_poll_result = overall_poll_result and result 
+            overall_poll_result = overall_poll_result and result
         return overall_poll_result
-        
-    def test_poll(self):
-        count = 0
-        while not self.poll_all_nodes():
-            time.sleep(120)
-            if count < MAX_TRIES:
-                count += 1
-            else:
-                break
-        if self.poll_all_nodes(): pass
-                # Successful
-        else: pass
-                # UnSuccessful
-  
+         
     def setup_ssh_key(self):	
 	shell_command("pip install pysftp")
 	if os.path.isfile('/root/.ssh/id_rsa') and  os.path.getsize('/root/.ssh/id_rsa')!=0:
@@ -316,5 +316,4 @@ if __name__ == "__main__":
     from configurator import fetch_db
     integrator = Integrator()  
     integrator.configure_unifiedstack()
-    integrator.test_poll()  
 

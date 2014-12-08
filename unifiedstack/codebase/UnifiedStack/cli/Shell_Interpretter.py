@@ -26,13 +26,13 @@ class ShellInterpretter:
         ShellInterpretter.console = console
 
     def execute_command(self, fully_qualified_command):
-        # command_list = fully_qualified_command.split()
+        command_list = fully_qualified_command.split()
         ShellInterpretter.console.cprint("COMMAND: " + fully_qualified_command)
-        #with open(r'log/unified_stack.log', 'a+') as output:
-        cmd = Popen(fully_qualified_command, stdout=PIPE, shell=True)
-        #output.write("[Command]: " + fully_qualified_command + "\r\n")
-        text = cmd.communicate()
-        #output.write(text)
+        with open(r'unified_stack.log', 'a') as output:
+            cmd = Popen(fully_qualified_command, stdout=PIPE, shell=True)
+            output.write("[Command]: " + fully_qualified_command + "\r\n")
+            text = cmd.communicate()[0]
+            output.write(text)
 
 if __name__ == "__main__":
     shi = ShellInterpretter()
