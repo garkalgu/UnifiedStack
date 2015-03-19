@@ -18,7 +18,8 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     $scope.data.device_types = {}
     // Details of new device to be accessed across the ngDialog and main page
     $scope.data.newdevice = {}
-    $scope.numbers = []
+    $scope.labels = []
+    $scope.sublabels = []
     
     
     // API endpoint details
@@ -396,32 +397,32 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	var l=0;
 	while(1){
 	    var temp = k+'-'+l;
-	    if ($scope.numbers.indexOf(temp) == -1) {
-		$scope.numbers.push(temp);
+	    if ($scope.sublabels.indexOf(temp) == -1) {
+		$scope.sublabels.push(temp);
 		break;
 	    }
 	    else
 	    l++;
 	}
 	output_html = '';
-	output_html +='<input type="text" class="form-control" placeholder="Enter sub label">';
+	output_html +='<input type="text" class="form-control" id="subLabel-'+temp+'" placeholder="Enter sub label">';
 	var compiled_device_html = $compile(output_html)($scope);
 	    $('#subLabel-'+k).append(compiled_device_html);
     
     }
     
     $scope.addNewLabel = function(){
-	var no_of_labels = $scope.numbers.length
+	var no_of_labels = $scope.labels.length;
 	if (no_of_labels++ == 0) {
-	    $scope.numbers.push(1);
+	    $scope.labels.push(1);
 	}
 	else{
-	    $scope.numbers.push(no_of_labels);
+	    $scope.labels.push(no_of_labels);
 	}
 	var output_html = '<hr>';
 	var i;
 	for(i=0;i<no_of_labels;i++)
-	{
+	{ 
 	    output_html +='<div class="form-group" class="alert alert-success">';
 		output_html +='<h3>Label '+(i+1)+' properties</h3>';
 		output_html +='<label>Level of attribute</label>';
@@ -437,7 +438,17 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 		
 		output_html +='<label>New label</label>';
 		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-2" placeholder="Enter label">';
-		output_html +='<div id="subLabel-'+(i+1)+'"></div>';
+		output_html +='<div id="subLabel-'+(i+1)+'">';
+		var l=0;
+		while(1){
+		    var temp = (i+1)+'-'+l;
+		    if ($scope.sublabels.indexOf(temp) == -1) 
+			break;
+		    else
+			l++;
+			output_html +='<input type="text" id="subLabel-'+temp+'" class="form-control" placeholder="Enter sub label">';
+		}
+		output_html +='</div>';
 		output_html +='<button class="pull-right" class="btn btn-default" data-ng-click="addNewSubLabel('+(i+1)+')">Add New Sub-Label</button>';
 		
 		output_html +='<label>Standard label</label>';
