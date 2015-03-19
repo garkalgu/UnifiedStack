@@ -392,6 +392,24 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	$window.alert("Submit clicked!")
 ;    }
     
+    $scope.addNewSubLabel = function(k){
+	var l=0;
+	while(1){
+	    var temp = k+'-'+l;
+	    if ($scope.numbers.indexOf(temp) == -1) {
+		$scope.numbers.push(temp);
+		break;
+	    }
+	    else
+	    l++;
+	}
+	output_html = '';
+	output_html +='<input type="text" class="form-control" placeholder="Enter sub label">';
+	var compiled_device_html = $compile(output_html)($scope);
+	    $('#subLabel-'+k).append(compiled_device_html);
+    
+    }
+    
     $scope.addNewLabel = function(){
 	var no_of_labels = $scope.numbers.length
 	if (no_of_labels++ == 0) {
@@ -401,58 +419,67 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    $scope.numbers.push(no_of_labels);
 	}
 	var output_html = '<hr>';
-	output_html +='<div class="form-group" class="alert alert-success">';
-	    output_html +='<h3>Label '+no_of_labels+' properties</h3>';
-	    output_html +='<label>Level of attribute</label>';
-	    
-	    output_html +='<div class="container" class="col-xs-2">';
-		output_html +='<select id="newLabel'+no_of_labels+'-1" >';
-		    output_html +='<option>Basic</option>';
-		    output_html +='<option>Mandatory</option>';
-		    output_html +='<option>Optional</option>';
-		    output_html +='<option>Advanced</option>';
-		output_html +='</select>';
-	    output_html +='</div>';
-	     
-	    output_html +='<label>New label</label>';
-	    output_html +='<input type="text" class="form-control" id="newLabel-'+no_of_labels+'-2" placeholder="Enter label">';
-	    
-	    output_html +='<label>Standard label</label>';
-	    output_html +='<input type="text" class="form-control" id="newLabel-'+no_of_labels+'-3" placeholder="Enter standard label">';
-	    
-	    output_html +='<label>Description</label>';
-	    output_html +='<input type="text" class="form-control" id="newLabel-'+no_of_labels+'-3" placeholder="Enter Description">';
-	    
-	    output_html +='<label>To be filled during</label>';
-	    output_html +='<div class="container" class="col-xs-3">';
-		output_html +='<select id="newLabel'+no_of_labels+'-4" >';
-		    output_html +='<option>Addition of devices</option>';
-		    output_html +='<option>Connection of devices</option>';
-		output_html +='</select>';
-	    output_html +='</div>';
-	    
-	output_html +='</div><hr>';
+	var i;
+	for(i=0;i<no_of_labels;i++)
+	{
+	    output_html +='<div class="form-group" class="alert alert-success">';
+		output_html +='<h3>Label '+(i+1)+' properties</h3>';
+		output_html +='<label>Level of attribute</label>';
+		
+		output_html +='<div class="container" class="col-xs-2">';
+		    output_html +='<select id="newLabel'+(i+1)+'-1" >';
+			output_html +='<option>Basic</option>';
+			output_html +='<option>Mandatory</option>';
+			output_html +='<option>Optional</option>';
+			output_html +='<option>Advanced</option>';
+		    output_html +='</select>';
+		output_html +='</div>';
+		
+		output_html +='<label>New label</label>';
+		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-2" placeholder="Enter label">';
+		output_html +='<div id="subLabel-'+(i+1)+'"></div>';
+		output_html +='<button class="pull-right" class="btn btn-default" data-ng-click="addNewSubLabel('+(i+1)+')">Add New Sub-Label</button>';
+		
+		output_html +='<label>Standard label</label>';
+		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-3" placeholder="Enter standard label">';
+		
+		output_html +='<label>Description</label>';
+		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-3" placeholder="Enter Description">';
+		
+		output_html +='<label>To be filled during</label>';
+		output_html +='<div class="container" class="col-xs-3">';
+		    output_html +='<select id="newLabel'+(i+1)+'-4" >';
+			output_html +='<option>Addition of devices</option>';
+			output_html +='<option>Connection of devices</option>';
+		    output_html +='</select>';
+		output_html +='</div>';
+		
+	    output_html +='</div><hr>';
+	}
 	var compiled_device_html = $compile(output_html)($scope);
-	    $('#labelSet').append(compiled_device_html);
+	    $('#labelSet').html(compiled_device_html);
     }
     
     $scope.registerNewDevice = function(){
 	var output_html = "";
-//	$window.alert("Entering into Register New Devices!");
-	output_html +='<h2>Enter Device name</h2>';
-	output_html +='<form role="form">';
-	output_html +='<div class="form-group">';
-	    output_html +='<label for="name">Device Name:</label>';
-	    output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter Device name">';
-	output_html +='</div>';
-	output_html +='<div id="labelSet"></div>';
-	output_html +='</div>';
-	output_html +='<button class="pull-right" class="btn btn-default" data-ng-click="addNewLabel()">Add New Label</button>';
-	output_html +='<button data-ng-click="registerDevice()" type="submit" class="btn btn-default">Submit</button></form>';
-	$('#devices-holder').empty();
-	var compiled_device_html = $compile(output_html)($scope);
-		$('#devices-holder').append(compiled_device_html);
-	$scope.addNewLabel();
+	//if ($scope.numbers.length==0)
+	{
+    //	$window.alert("Entering into Register New Devices!");
+	    output_html +='<h2>Enter Device name</h2>';
+	    output_html +='<form role="form">';
+	    output_html +='<div class="form-group">';
+		output_html +='<label for="name">Device Name:</label>';
+		output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter Device name">';
+	    output_html +='</div>';
+	    output_html +='<div id="labelSet"></div>';
+	    $('#devices-holder').empty();
+	    output_html +='<button class="pull-right" class="btn btn-default" data-ng-click="addNewLabel()">Add New Label</button>';
+	    output_html +='<button data-ng-click="registerDevice()" type="submit" class="btn btn-default">Submit</button></form>';
+	    
+	    var compiled_device_html = $compile(output_html)($scope);
+		    $('#devices-holder').append(compiled_device_html);
+	    $scope.addNewLabel();
+	}
    }
     
     $scope.saveConfiguration = function(){
