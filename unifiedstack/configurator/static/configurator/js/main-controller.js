@@ -389,9 +389,53 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	
     }
     
+    $scope.addDeviceToDB = function(dname,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels){
+	$window.alert("Alerting now!");
+	var url = api_prefix + "configurator/api/v1.0/savenewdevice";
+	var D = $resource(url,{});
+	var Device = new D();
+	Device.dtype = "S";
+	Device.level = dlevel;
+	//Device.label = dlabel;
+	Device.standard_label = dstdlabel;
+	Device.desc = ddesc;
+	var str = dsublabels.split("(");
+	if (str[1]!= '\0') {
+	    Device.label = dlabel+dsublabels;
+	}
+	Device.$save();
+    }
+    
+    
     $scope.registerDevice = function(){
 	$window.alert("Submit clicked!")
-;    }
+	var i;
+	for(i=0;i<$scope.labels.length;i++){
+	    dname = document.getElementById('dname').value;
+	    dlevel = document.getElementById('newLabel-'+(i+1)+'-1').value;
+	    dlabel = document.getElementById('newLabel-'+(i+1)+'-2').value;
+	    dstdlabel = document.getElementById('newLabel-'+(i+1)+'-3').value;
+	    ddesc = document.getElementById('newLabel-'+(i+1)+'-4').value;
+	    dpurpose = document.getElementById('newLabel-'+(i+1)+'-5').value;
+	    var k=0;
+	    var dsublabels ='(';
+	    while(1){
+		var temp = (i+1)+'-'+k;
+		if ($scope.sublabels.indexOf(temp) == -1) {
+		    dsublabels +=")";
+		    break;
+		}
+		else{
+		    sub = document.getElementById('subLabel-'+temp).value;
+		    dsublabels += sub+";";
+		    k++;
+		}
+	    }
+	    $window.alert(dsublabels);
+	    $scope.addDeviceToDB(dname,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels);
+	    
+	}
+    }
     
     $scope.addNewSubLabel = function(k){
 	var l=0;
@@ -428,7 +472,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 		output_html +='<label>Level of attribute</label>';
 		
 		output_html +='<div class="container" class="col-xs-2">';
-		    output_html +='<select id="newLabel'+(i+1)+'-1" >';
+		    output_html +='<select id="newLabel-'+(i+1)+'-1" >';
 			output_html +='<option>Basic</option>';
 			output_html +='<option>Mandatory</option>';
 			output_html +='<option>Optional</option>';
@@ -449,17 +493,17 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 			output_html +='<input type="text" id="subLabel-'+temp+'" class="form-control" placeholder="Enter sub label">';
 		}
 		output_html +='</div>';
-		output_html +='<button class="pull-right" class="btn btn-default" data-ng-click="addNewSubLabel('+(i+1)+')">Add New Sub-Label</button>';
+		output_html +='<button class="pull-right" class="btn btn-primary panel-button btn-block" data-ng-click="addNewSubLabel('+(i+1)+')">Add New Sub-Label</button>';
 		
-		output_html +='<label>Standard label</label>';
+		output_html +='<br/><label>Standard label</label>';
 		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-3" placeholder="Enter standard label">';
 		
-		output_html +='<label>Description</label>';
-		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-3" placeholder="Enter Description">';
+		output_html +='<br/><label>Description</label>';
+		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-4" placeholder="Enter Description">';
 		
-		output_html +='<label>To be filled during</label>';
+		output_html +='<br/><label>To be filled during</label>';
 		output_html +='<div class="container" class="col-xs-3">';
-		    output_html +='<select id="newLabel'+(i+1)+'-4" >';
+		    output_html +='<select id="newLabel-'+(i+1)+'-5" >';
 			output_html +='<option>Addition of devices</option>';
 			output_html +='<option>Connection of devices</option>';
 		    output_html +='</select>';

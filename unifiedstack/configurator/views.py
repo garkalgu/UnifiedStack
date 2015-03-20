@@ -137,6 +137,21 @@ def save_configuration(request):
     return JSONResponse("Success")
 
 @csrf_exempt
+def save_new_device(request):
+    print "Savinf new Device"
+    if(request.method == "POST"):
+        print "Post request to new Device"
+        data = JSONParser().parse(request)
+        D = data["dtype"]
+        L = data["level"]
+        STD = data["standard_label"]
+        DESC = data["desc"]
+        DeviceTypeSetting(level=L,dtype=D,label=L,standard_label=STD,desc=DESC,multiple="False").save();
+    else:
+        print "Bad DeviceTypesetting"
+    return JSONResponse("Success")
+
+@csrf_exempt
 def configure_setup(request):
     print "Configuration started."
     if request.method == "POST":
