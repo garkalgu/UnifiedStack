@@ -74,28 +74,13 @@
                             <a href="#" data-ng-click="registerNewDevice()"><i class="fa fa-book fa-fw"></i> Register a new device</span></a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-plus-square-o fa-fw"></i> Add Device<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#" data-ng-click="showAddDeviceDialog('S')"><i class="fa fa-arrows-alt fa-fw"></i> Switch</a>
-                                </li>
-                                <li>
-                                    <a href="#" data-ng-click="showAddDeviceDialog('F')"><i class="fa fa-random fa-fw"></i> Fabric Interconnect</a>
-                                </li>
-                                <li>
-                                    <a href="#" data-ng-click="showAddDeviceDialog('C')"><i class="fa fa-sitemap fa-fw"></i> Cobbler</a>
-                                </li>
-                                <li>
-                                    <a href="#" data-ng-click="showAddDeviceDialog('FO')"><i class="fa fa-sitemap fa-fw"></i> Foreman</span></a>
-                                </li>
-                                <li>
-                                    <a href="#" data-ng-click="showAddDeviceDialog('P')"><i class="fa fa-cube fa-fw"></i> Packstack</span></a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
+                            <a href="#" data-ng-click="registerNewDevice()"><i class="glyphicon glyphicon-plus"></i> Add new device to topology</span></a>
+                        </li>
+			<li>
+                            <a href="#"><i class="glyphicon glyphicon-th"></i> Specify connections in topology</span></a>
                         </li>
                         <li>
-                            <a href="#" data-ng-click="saveConfiguration()"><i class="fa fa-save fa-fw"></i> Save Configuration</span></a>
+                            <a href="#"><i class="fa fa-save fa-fw"></i> Save Configuration</span></a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-eye fa-fw"></i> View Devices<span class="fa arrow"></span></a>
@@ -116,7 +101,7 @@
                                     <a href="#" data-ng-click="loadExistingDevicesOfType('P')"><i class="fa fa-cube fa-fw"></i> Packstack</span></a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
+                            <!-- /.nav-second-level 
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bug fa-fw"></i> Report bug</span></a>
@@ -128,16 +113,16 @@
                             <a href="https://github.com/rahuupad/UnifiedStack/wiki" target="_blank"><i class="fa fa-github fa-fw"></i> Visit us at git</span></a>
                         </li>
 			<li>                            
-                            <a href="#" data-ng-click="reloadConfiguration()">Auto Import</a>
+                            <a href="#" data-ng-click="reloadConfiguration()"><i class="glyphicon glyphicon-download-alt"></i> Auto Import</a>
                         </li>
 			<li>                            
                             <!-- /.list-group -->
-                            <a href="#" >Visualize Topology</a>
+                            <a href="#"><i class="fa-file-image-o"></i> Visualize Topology</a>
                         </li>
 
                         <li>                            
                             <!-- /.list-group -->
-                            <a href="#" data-ng-click="showConfigurationResult()">Configure</a>
+                            <a href="#" data-ng-click="showConfigurationResult()"><i class="glyphicon glyphicon-inbox"></i> Configure</a>
                         </li>
                     </ul>
                 </div>
