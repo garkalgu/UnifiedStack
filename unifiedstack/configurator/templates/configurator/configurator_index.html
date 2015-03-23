@@ -54,7 +54,7 @@
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="navbar-header" >
-                <a class="navbar-brand" href="{% static 'configurator/sample' %}"><i class="fa fa-cloud fa-fw"></i> UnifiedStack 1.0 - Beta</a>
+                <a class="navbar-brand" href="{% static 'configurator/index' %}"><i class="fa fa-cloud fa-fw"></i> UnifiedStack 1.0 - Beta</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -71,13 +71,7 @@
                             <img src="http://i1-news.softpedia-static.com/images/news2/Cisco-to-Acquire-Prague-Based-Cognitive-Security-2.png" width="100%" class="img-responsive" alt="Responsive image">
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-dashboard fa-fw"></i><b> Dashboard</b></a>
-                        </li>
-                        <li>
-                            <a href="#" data-ng-click="registerNewDevice()"><i class="fa fa-book fa-fw"></i> Add a new device</span></a>
-                        </li>
-			<li>
-                            <a href="#" data-ng-click="loadExistingDevicesOfType('G')"><i class="fa fa-files-o fa-fw"></i> General Setting</span></a>
+                            <a href="#" data-ng-click="registerNewDevice()"><i class="fa fa-book fa-fw"></i> Register a new device</span></a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-plus-square-o fa-fw"></i> Add Device<span class="fa arrow"></span></a>
@@ -99,9 +93,6 @@
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-refresh fa-fw"></i> Validate Configuration</span></a>
                         </li>
                         <li>
                             <a href="#" data-ng-click="saveConfiguration()"><i class="fa fa-save fa-fw"></i> Save Configuration</span></a>
@@ -136,6 +127,18 @@
                         <li>
                             <a href="https://github.com/rahuupad/UnifiedStack/wiki" target="_blank"><i class="fa fa-github fa-fw"></i> Visit us at git</span></a>
                         </li>
+			<li>                            
+                            <a href="#" data-ng-click="reloadConfiguration()">Auto Import</a>
+                        </li>
+			<li>                            
+                            <!-- /.list-group -->
+                            <a href="#" >Visualize Topology</a>
+                        </li>
+
+                        <li>                            
+                            <!-- /.list-group -->
+                            <a href="#" data-ng-click="showConfigurationResult()">Configure</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -146,7 +149,7 @@
         <div id="page-wrapper">
             <br/><br/><br/>
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <!--
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -173,30 +176,6 @@
                     <!-- /.panel -->
                 </div>
                 <!-- /.col-lg-8 -->
-                <div class="col-lg-4">
-                    <div class="panel panel-info" style="text-align: center;">
-                        <div class="panel-heading">
-                            <i class="fa fa-cog fa-fw"></i> Execute
-                        </div>
-                        <div class="panel-body" >                            
-                            <!-- /.list-group -->
-                            <a href="#" class="btn btn-default panel-button btn-block">Visualize Topology</a>
-                        </div>
-                        <div class="panel-body">                            
-                            <!-- /.list-group -->
-                            <a href="#" class="btn btn-default panel-button btn-block" data-ng-click="reloadConfiguration()">Import Configuration</a>
-                        </div>
-                        <div class="panel-body">                            
-                            <!-- /.list-group -->
-                            <a href="#" class="btn btn-default panel-button btn-block" data-ng-click="reloadConfiguration()">Auto Configure</a>
-                        </div>
-                        <div class="panel-body">                            
-                            <!-- /.list-group -->
-                            <a href="#" class="btn btn-default panel-button btn-block" data-ng-click="showConfigurationResult()">Configure</a>
-                        </div>
-                    </div>
-                <!-- /.col-lg-4 -->
-            </div>
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
