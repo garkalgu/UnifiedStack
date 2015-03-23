@@ -15,7 +15,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=50)),
-                ('dtype', models.CharField(max_length=2, choices=[(b'S', b'Switch'), (b'C', b'Cobbler'), (b'F', b'FI'), (b'P', b'Packstack'), (b'FO', b'Foreman'), (b'G', b'General')])),
                 ('desc', models.CharField(max_length=200, blank=True)),
             ],
             options={
@@ -34,16 +33,27 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='DeviceType',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('dname', models.CharField(max_length=50)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='DeviceTypeSetting',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('level', models.CharField(default=b'B', max_length=1, choices=[(b'M', b'Mandatory'), (b'B', b'Basic'), (b'O', b'Optional'), (b'A', b'Advanced')])),
-                ('dtype', models.CharField(max_length=2, choices=[(b'S', b'Switch'), (b'C', b'Cobbler'), (b'F', b'FI'), (b'P', b'Packstack'), (b'FO', b'Foreman'), (b'G', b'General')])),
                 ('stype', models.CharField(max_length=200)),
                 ('label', models.CharField(max_length=200)),
                 ('standard_label', models.CharField(max_length=200)),
                 ('desc', models.CharField(default=b'', max_length=200, blank=True)),
-                ('multiple', models.BooleanField()),
+                ('multiple', models.BooleanField(default=False)),
+                ('dpurpose', models.CharField(default=b'AD', max_length=2, choices=[(b'AD', b'AD'), (b'CO', b'CO')])),
+                ('d_type', models.ForeignKey(related_name=b'device_type', default=b'', to='configurator.DeviceType')),
             ],
             options={
             },
@@ -53,6 +63,12 @@ class Migration(migrations.Migration):
             model_name='devicesetting',
             name='device_type_setting',
             field=models.ForeignKey(related_name=b'values', to='configurator.DeviceTypeSetting'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='device',
+            name='d_type',
+            field=models.ForeignKey(related_name=b'dev_type', default=b'', to='configurator.DeviceType'),
             preserve_default=True,
         ),
     ]
