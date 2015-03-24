@@ -10,8 +10,8 @@ from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
-from configurator.models import Device, DeviceSetting, DeviceTypeSetting
-from configurator.serializers import DeviceSerializer, DeviceSettingSerializer, DeviceTypeSettingSerializer
+from configurator.models import Device, DeviceSetting, DeviceTypeSetting, DeviceType
+from configurator.serializers import DeviceSerializer, DeviceSettingSerializer, DeviceTypeSettingSerializer, DeviceTypeSerializer
 from logger.serializers import LogSerializer
 from logger.models import ConsoleLog
 
@@ -169,6 +169,10 @@ class DeviceTypeSettingViewSet(viewsets.ModelViewSet):
     queryset = DeviceTypeSetting.objects.all()
     serializer_class = DeviceTypeSettingSerializer
    
+class DeviceTypeViewSet(viewsets.ModelViewSet):
+    queryset = DeviceType.objects.all()
+    serializer_class = DeviceTypeSerializer
+    
 # Sample code to check working of the configurator
     
 def sample(request):

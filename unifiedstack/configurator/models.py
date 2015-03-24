@@ -63,10 +63,10 @@ class DeviceTypeSetting(models.Model):
 #   The above DeviceTypeSetting model is used to store the TypeSetting of each device.Ex:"Hostname"(as label) can be stored for a switch
 #   with other fields in the model specifying info about the label.
 #   dpurpose is used to specify if the particular value is to be specified during addition of the device or during connection of the device(Step 2 or 3)
-# For a compound setting say ("hostsettings"  with "ip" and "password") we may use as follows
-# label (Host Settings(hostname; IP; Password))
-# Standard label (host_settings(hostname;ip; password))
-# value (rootuser;19.19.200.150;fun)
+#   For a compound setting say ("hostsettings"  with "ip" and "password") we may use as follows
+#   label (Host Settings(hostname; IP; Password))
+#   Standard label (host_settings(hostname;ip; password))
+#   value (rootuser;19.19.200.150;fun)
  
 class Device(models.Model):
     title = models.CharField(max_length=50)
