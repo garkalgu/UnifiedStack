@@ -84,5 +84,5 @@ class DeviceSetting(models.Model):
     def __str__(self):
         return str(self.device_type_setting) + ": " + self.value
     def __unicode__(self):
-        return str(self.value)
+        return unicode(self.value)
 #   The value for each label specified in the DevicetypeSetting is stored for a corresponding entry in the DeviceTypeSetting and Device models.    

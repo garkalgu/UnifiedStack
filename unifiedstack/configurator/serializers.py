@@ -12,11 +12,11 @@ class DeviceSettingSerializer(serializers.HyperlinkedModelSerializer):
     device_id = serializers.PrimaryKeyRelatedField(source='device')
     device_title = serializers.SlugRelatedField(source='device', slug_field='title', read_only=True)
     device_type = serializers.SlugRelatedField(source='device_type_setting',slug_field='label',read_only=True)
-    #device_type_setting_id = serializers.PrimaryKeyRelatedField(source = 'device_type_setting')
+    device_type_setting_id = serializers.SlugRelatedField(source ='device_type_setting',slug_field='id',read_only=True)
     class Meta:
         model = DeviceSetting
         # fields = ('id', 'label', 'desc', 'stype', 'value', 'standard_label', 'setting_id', 'device_id', 'device_title', )
-        fields = ('id', 'value','device_id','device_title','device_type',)
+        fields = ('id','device_id','device_title','device_type_setting_id','device_type', 'value',)
 
 class DeviceTypeSettingSerializer(serializers.HyperlinkedModelSerializer):
     setting_values = serializers.RelatedField(source='values', many=True)
