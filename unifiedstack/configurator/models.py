@@ -3,7 +3,7 @@ from django.db import models
 class DeviceType(models.Model):
     dname = models.CharField(max_length=50)
     def __str__(self):
-        return self.id +" : "+ self.dname
+        return str(self.id) + ": "+ str(self.dname)
 #   A new device being added such as "Switch-nexus9K" which should be registred by the admin will be added to this.
 #   Other models reference from this model for the drop-down menu
 
@@ -73,7 +73,7 @@ class Device(models.Model):
     d_type = models.ForeignKey(DeviceType, related_name="dev_type", default="")
     desc = models.CharField(max_length=200, blank=True)
     def __str__(self):
-        return self.title + ": " + self.desc
+        return self.title + ":"  + ": " + self.desc
 #   A new device which will be added by the user will be added to this.
 
 
@@ -83,4 +83,6 @@ class DeviceSetting(models.Model):
     value = models.CharField(max_length=200, blank=False)
     def __str__(self):
         return str(self.device_type_setting) + ": " + self.value
+    def __unicode__(self):
+        return str(self.value)
 #   The value for each label specified in the DevicetypeSetting is stored for a corresponding entry in the DeviceTypeSetting and Device models.    

@@ -10,26 +10,28 @@ class DeviceTypeSerializer(serializers.HyperlinkedModelSerializer):
     
 class DeviceSettingSerializer(serializers.HyperlinkedModelSerializer):
     device_id = serializers.PrimaryKeyRelatedField(source='device')
-    device_type_setting_id = serializers.PrimaryKeyRelatedField(source='device_type_setting')
-    #setting_id = serializers.PrimaryKeyRelatedField(source='compound_settings', required=False)
     device_title = serializers.SlugRelatedField(source='device', slug_field='title', read_only=True)
+    device_type = serializers.SlugRelatedField(source='device_type_setting',slug_field='label',read_only=True)
+    #device_type_setting_id = serializers.PrimaryKeyRelatedField(source = 'device_type_setting')
     class Meta:
         model = DeviceSetting
         # fields = ('id', 'label', 'desc', 'stype', 'value', 'standard_label', 'setting_id', 'device_id', 'device_title', )
-        fields = ('id', 'value', 'device_id', 'device_type_setting_id', 'device_title', )
+        fields = ('id', 'value','device_id','device_title','device_type',)
 
 class DeviceTypeSettingSerializer(serializers.HyperlinkedModelSerializer):
     setting_values = serializers.RelatedField(source='values', many=True)
-    device_name = serializers.RelatedField(source = 'dname')
+    Device_name = serializers.SlugRelatedField(source = 'd_type',slug_field='dname')
     #setting_id = serializers.PrimaryKeyRelatedField(source='compound_settings', required=False)
     class Meta:
         model = DeviceTypeSetting
         # fields = ('id', 'label', 'desc', 'stype', 'value', 'standard_label', 'setting_id', 'device_id', 'device_title', )
-        fields = ('id', 'd_type', 'stype', 'label', 'desc', 'standard_label', 'level', 'multiple', 'setting_values','device_name',)
+        fields = ('id','Device_name', 'stype', 'label', 'desc', 'standard_label', 'level', 'multiple', 'setting_values','dpurpose')
 
 class DeviceSerializer(serializers.HyperlinkedModelSerializer):
-    logs = serializers.RelatedField(source='logs', many=True)
-    settings = serializers.RelatedField(source='settings', many=True)
+    #logs = serializers.RelatedField(source='logs', many=True)
+    #settings = serializers.RelatedField(source='settings', many=True)
+    deviceName = serializers.SlugRelatedField(source="d_type",slug_field="dname",read_only=True)
+    device_type = serializers.PrimaryKeyRelatedField(source="d_type")
     class Meta:
         model = Device
-        fields = ('id', 'd_type', 'title', 'desc', 'logs', 'settings')        
+        fields = ('id' , 'deviceName', 'device_type', 'title', 'desc', )        
