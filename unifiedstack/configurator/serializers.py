@@ -31,7 +31,7 @@ class DeviceSerializer(serializers.HyperlinkedModelSerializer):
     #logs = serializers.RelatedField(source='logs', many=True)
     #settings = serializers.RelatedField(source='settings', many=True)
     deviceName = serializers.SlugRelatedField(source="d_type",slug_field="dname",read_only=True)
-    device_type = serializers.PrimaryKeyRelatedField(source="d_type")
+    device_type_id = serializers.PrimaryKeyRelatedField(source="d_type")
     class Meta:
         model = Device
-        fields = ('id' , 'deviceName', 'device_type', 'title', 'desc', )        
+        fields = ('id' , 'deviceName', 'device_type_id', 'title', 'desc', )        
