@@ -14,4 +14,5 @@ urlpatterns = patterns('',
                        url(r'^configurator/api/v1.0/savenewdevice$', views.save_new_device),
 
                        url(r'^configurator/sample$', views.sample),
+                       #All above urls have been changed.
                 )

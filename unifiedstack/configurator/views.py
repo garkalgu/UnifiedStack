@@ -180,7 +180,7 @@ class DeviceTypeViewSet(viewsets.ModelViewSet):
     queryset = DeviceType.objects.all()
     serializer_class = DeviceTypeSerializer
     
-# Sample code to check working of the configurator
+# Don not know from below code.Have to change if need arises.
     
 
     
