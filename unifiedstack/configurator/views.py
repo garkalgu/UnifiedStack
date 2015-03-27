@@ -29,11 +29,10 @@ class JSONResponse(HttpResponse):
         
 # Rest API endpoint for configurator
 def device_type_list(request):
-    """ List all devices supported present in the data configuration """
+    """ List all devices supported present in the data configuration as an array"""
     if request.method == 'GET':
-        devices = DeviceType.objects.all()
-        serializer = DeviceTypeSerializer(devices, many=True)
-        return JSONResponse(serializer.data)
+        devices = DeviceType.objects.values_list('dname')
+        return JSONResponse(devices)
 
 def device_type_settings_list(request, p_dtype):
     """ List all device settings provided by a particular dtype """
@@ -159,12 +158,27 @@ def save_new_device(request):
         print "Bad DeviceTypesetting"
     return JSONResponse("Success")
 
+@csrf_exempt
+def add_to_device_type(request):
+    if(request.method == "POST"):
+        print "Adding a new device";
+        data = JSONParser().parse(request);
+        name = data["dname"];
+        DeviceType(dname=name).save();
+    else:
+        print "Some trouble adding new device";
+    return JSONResponse("Success")
+
+
 def sample(request):
     c = {}
     c["request"] = request
     context = RequestContext(request)
     return render_to_response("configurator/configurator_index.html", c, context_instance=RequestContext(request))
 
+@csrf_exempt
+def add_to_device_type_setting(request):
+    pass
 
 
 # ViewSets define the view behavior.
