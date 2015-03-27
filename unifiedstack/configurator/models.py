@@ -52,7 +52,7 @@ class DeviceTypeSetting(models.Model):
     level = models.CharField(max_length=1, choices=SETTING_LEVEL_CHOICES,
                                     default=BASIC_LEVEL)
     d_type = models.ForeignKey(DeviceType, related_name="device_type",default="")
-    stype = models.CharField(max_length=200)
+    stype = models.CharField(max_length=200,choices = SETTING_TYPE_CHOICES,default=ALPHA_NUMERIC_TYPE)
     label = models.CharField(max_length=200, blank=False)
     standard_label = models.CharField(max_length=200, blank=False)
     desc = models.CharField(max_length=200, blank=True, default="")
