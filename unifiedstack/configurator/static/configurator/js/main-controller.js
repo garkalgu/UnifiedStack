@@ -45,76 +45,103 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	})
     };
     
-    $scope.addDeviceType = function(device_name,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels){
-	$window.alert("Trying to add to DeviceType!");
-	var url = api_prefix + "configurator/api/v1.0/savenewdevicetype"
-	var Value = $resource(url,{});
-	DeviceType = new Value();
-	DeviceType.dname = device_name;
-	DeviceType.$save(function(u){
-	    var url = api_prefix + "configurator/api/v1.0/savenewdevicetypesetting"
-	    var DTS = $resource(url,{});
-	    DeviceTypeSetting = new DTS();
-	    DeviceTypeSetting.level = dlevel;
-	    DeviceTypeSetting.d_type = dname;
-	    DeviceTypeSetting.stype = dstype;
-	    DeviceTypeSetting.label = dlabel;
-	    DeviceTypeSetting.standard_label = dstdlabel;
-	    DeviceTypeSetting.desc = ddesc;
-	    DeviceTypeSetting.dpurpose = dpurpose;
-	});
-    }
     
-//      
-//    $scope.addDeviceToDB = function(dname,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels){
-//	$window.alert("Alerting now!");
-//	var url = api_prefix + "configurator/api/v1.0/savenewdevice";
-//	var D = $resource(url,{});
-//	var Device = new D();
-//	Device.dtype = "S";
-//	Device.level = dlevel;
-//	//Device.label = dlabel;
-//	Device.standard_label = dstdlabel;
-//	Device.desc = ddesc;
-//	var str = dsublabels.split("(");
-//	if (str[1]!= '\0') {
-//	    Device.label = dlabel+dsublabels;
+//    $scope.addDeviceType = function(device_name,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels){
+//	$window.alert("Trying to add to DeviceType!");
+//	var url = api_prefix + "configurator/api/v1.0/savenewdevicetype";
+//	if (dsublabels) {
+//	    dlabel +=dsublabels;
 //	}
-//	Device.$save();
+//	var Value = $resource(url,{});
+//	DeviceType = new Value();
+//	DeviceType.dname = device_name;
+//	DeviceType.$save(value , function(){
+//	    var url = api_prefix + "configurator/api/v1.0/savenewdevicetypesetting"
+//	    var DTS = $resource(url,{});
+//	    DeviceTypeSetting = new DTS();
+//	    DeviceTypeSetting.level = dlevel;
+//	    DeviceTypeSetting.d_type = value;
+//	    DeviceTypeSetting.stype = dstype;
+//	    DeviceTypeSetting.label = dlabel;
+//	    DeviceTypeSetting.standard_label = dstdlabel;
+//	    DeviceTypeSetting.desc = ddesc;
+//	    DeviceTypeSetting.dpurpose = dpurpose;
+//	    DeviceTypeSetting.$save();
+//	});
 //    }
 //    
+      
+    $scope.addDeviceToDB = function(device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels,dsubstypes){
+	$window.alert("Alerting now!");
+	var url = api_prefix + "configurator/api/v1.0/savenewdevicetype";
+	if (dsublabels) {
+	    dlabel +=dsublabels;
+	    dstype +=dsubstypes;
+	}
+	if (device_name) {
+	    $window.alert("Saving DeviceType = "+device_name);
+	    var Value = $resource(url,{});
+	    DeviceType = new Value();
+	    DeviceType.dname = device_name;
+	    var p = DeviceType.$save()
+	    if (p)
+	    $scope.AddDTS(device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels);
+	}
+    }
+    
+    $scope.AddDTS = function (device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels){
+	$window.alert("Adding to DTS");
+	var url = api_prefix + "configurator/api/v1.0/savenewdts";
+	var DTS = $resource(url,{});
+	$window.alert("Got $resource");
+	DeviceTypeSetting = new DTS();
+	DeviceTypeSetting.level = dlevel;
+	DeviceTypeSetting.d_type = device_name;
+	DeviceTypeSetting.stype = dstype;
+	DeviceTypeSetting.label = dlabel;
+	DeviceTypeSetting.standard_label = dstdlabel;
+	DeviceTypeSetting.desc = ddesc;
+	DeviceTypeSetting.dpurpose = dpurpose;
+	DeviceTypeSetting.$save();
+    }
+    
     
     $scope.registerToDB = function(){
 	var i;
 	for(i=0;i<$scope.labels.length;i++){
 	    dname = document.getElementById('dname').value;
-	    dlevel = document.getElementById('newLabel-'+(i+1)+'-1').value;
-	    dlabel = document.getElementById('newLabel-'+(i+1)+'-2').value;
-	    dstype = document.getElementById('newLabel-'+(i+1)+'-3').value;
-	    dstdlable = document.getElementById('newLabel-'+(i+1)+'-4').value;
-	    desc = document.getElementById('newLabel-'+(i+1)+'-5').value;
-	    dpurpose = document.getElementById('newLabel-'+(i+1)+'-6').value;
+	    dlevel = document.getElementById('Level-'+(i+1)).value;
+	    dlabel = document.getElementById('Label-'+(i+1)).value;
+	    dstype = document.getElementById('Stype-'+(i+1)).value;
+	    dstdlabel = document.getElementById('StdLabel-'+(i+1)).value;
+	    ddesc = document.getElementById('Desc-'+(i+1)).value;
+	    dpurpose = document.getElementById('Purpose-'+(i+1)).value;
+	    $window.alert("Getting all values!");
 	    var k=0;
 	    var temp = (i+1)+'-'+k;
-	    if ($scope.sublabels.indexOf(temp) == -1){}
-	    else{
-		do{
-		    sublabel ='('
-		    sublabel_1 = document.getElementById('subLabel-'+temp).value;
-		    $window.alert(sublabel_1);
+	    sublabels = '(';
+	    substypes = '(';
+	    while(1){
+		if ($scope.sublabels.indexOf(temp) == -1){break;}
+		else{
+		    sublabel_this = document.getElementById('subLabel-'+temp).value;
+		    sublabels += sublabel_this+";";
+		    substype_this =document.getElementById('subStype-'+temp).value;
+		    substypes +=substype_this + ";";
+		    k++;
+		    temp = (i+1)+'-'+k;
 		}
-		while($scope.sublabels.indexOf(temp) != -1){
-		    	sub = document.getElementById('subLabel-'+temp).value;
-			dsublabels += sub+";";
-			k++;
-		    
-		}
-		sublabel +=')';
 	    }
-	    $window.alert(dsublabels);
-	    //$scope.addDeviceType(dname,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels);
-	    //$scope.addDeviceToDB(dname,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels);
-	    
+	    var len=sublabels.length;
+	    sublabels = sublabels.substring(0,len-1);
+	    len = substypes.length;
+	    substypes = substypes.substring(0,len-1);
+	    if (sublabels) {
+		sublabels +=')';
+		substypes +=')';
+	    }
+	//    $scope.addDeviceType(dname,dlevel,dlabel,dstdlabel,ddesc,dpurpose,sublabels);
+	    $scope.addDeviceToDB(dname,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,sublabels,substypes); 
 	}
     }
     
@@ -136,7 +163,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	
 	
 	output_html = '';
-	output_html +='<select class="form-control">';
+	output_html +='<select class="form-control" id ="subStype-'+temp+'">';
 	    output_html +='<option>ALPHA_NUMERIC_TYPE</option>';
 	    output_html +='<option>NUMERIC_TYPE</option>';
 	    output_html +='<option>ALPHA_TYPE</option>';
@@ -148,11 +175,13 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    output_html +='<option>CUSTOM_TYPE</option>';
 	output_html +='</select>';
 	var compiled_device_html = $compile(output_html)($scope);
+	//$window.alert("subStype-"+k);
 	$('#subStype-'+k).append(compiled_device_html);
     
     }
     
     $scope.addNewLabel = function(){
+	//$scope.labels is a list for the number of lables for that particular div.It should be updated with consecutive numbers only.
 	var no_of_labels = $scope.labels.length;
 	if (no_of_labels++ == 0) {
 	    $scope.labels.push(1);
@@ -161,100 +190,70 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    $scope.labels.push(no_of_labels);
 	}
 	var output_html = '<hr>';
-	var i;
-	for(i=0;i<no_of_labels;i++)
-	{ 
-	    output_html +='<div class="form-group" class="alert alert-success">';
-		output_html +='<h3>Label '+(i+1)+' properties</h3>';
-		output_html +='<label>Level of attribute</label>';
-		
-		output_html +='<div class ="fluid-container">';
-		    output_html +='<select class="form-control" id="newLabel-'+(i+1)+'-1" >';
-			output_html +='<option>Basic</option>';
-			output_html +='<option>Mandatory</option>';
-			output_html +='<option>Optional</option>';
-			output_html +='<option>Advanced</option>';
-		    output_html +='</select><br/>';
-		output_html +='</div>';
-		
-		output_html +='<div class="col-md-6">';
+	var i=(no_of_labels-1);
+	output_html +='<div class="form-group" class="alert alert-success">';
+	    output_html +='<h3>Label '+(i+1)+' properties</h3>';
+	    output_html +='<label>Level of attribute</label>';
+	    
+	    output_html +='<div class ="fluid-container">';
+		output_html +='<select class="form-control" id="Level-'+(i+1)+'" >';
+		    output_html +='<option>Basic</option>';
+		    output_html +='<option>Mandatory</option>';
+		    output_html +='<option>Optional</option>';
+		    output_html +='<option>Advanced</option>';
+		output_html +='</select><br/>';
+	    output_html +='</div>';
+	    
+	    output_html +='<div class="col-md-6">';
 		output_html +='<label>New label</label>';
 		output_html +='<div class="fluid-container">';
-		    output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-2" placeholder="Enter label">';
-		    output_html +='<div id="subLabel-'+(i+1)+'">';
-		    var l=0;
-		    while(1){
-			var temp = (i+1)+'-'+l;
-			if ($scope.sublabels.indexOf(temp) == -1) 
-			    break;
-			else
-			    l++;
-			    output_html +='<input type="text" id="subLabel-'+temp+'" class="form-control" placeholder="Enter sub label">';
-		    }
-		    output_html +='</div>';
-		output_html +='</div></div>';
-		
-		output_html +='<div class="col-md-6">';
-		output_html +='<label>Type of value to be entered</label>';
-		    output_html +='<select class="form-control" id="newLabel-'+(i+1)+'-3">';
-			output_html +='<option>ALPHA_NUMERIC_TYPE</option>';
-			output_html +='<option>NUMERIC_TYPE</option>';
-			output_html +='<option>ALPHA_TYPE</option>';
-			output_html +='<option>PASSWORD_TYPE</option>';
-			output_html +='<option>IP_TYPE</option>';
-			output_html +='<option>MAC_TYPE</option>';
-			output_html +='<option>MULTIPLE_IP_TYPE</option>';
-			output_html +='<option>EMAIL_TYPE</option>';
-			output_html +='<option>CUSTOM_TYPE</option>';
-		    output_html +='</select>';
-		    output_html +='<div id="subStype-'+(i+1)+'"></div>';
-		    var l=0;
-		    while(1){
-			var temp = (i+1)+'-'+l;
-			if ($scope.sublabels.indexOf(temp) == -1) 
-			    break;
-			else
-			    l++;
-			    output_html +='<select class="form-control" id="newLabel-'+(i+1)+'-3">';
-				output_html +='<option>ALPHA_NUMERIC_TYPE</option>';
-				output_html +='<option>NUMERIC_TYPE</option>';
-				output_html +='<option>ALPHA_TYPE</option>';
-				output_html +='<option>PASSWORD_TYPE</option>';
-				output_html +='<option>IP_TYPE</option>';
-				output_html +='<option>MAC_TYPE</option>';
-				output_html +='<option>MULTIPLE_IP_TYPE</option>';
-				output_html +='<option>EMAIL_TYPE</option>';
-				output_html +='<option>CUSTOM_TYPE</option>';
-			    output_html +='</select>';
-		    }
-		    output_html +='</div>';
-		    output_html +='<button class="pull-right" class="btn btn-primary panel-button btn-block" data-ng-click="addNewSubLabel('+(i+1)+')"><em class="glyphicon glyphicon-plus"></em></button>';
-		output_html +='</div><br/><br/>';
-		
-		
-		output_html +='<br/><label>Standard label</label>';
-		output_html +='<div class="fluid-container">';
-		
-		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-4" placeholder="Enter standard label">';
+		    output_html +='<input type="text" class="form-control" id="Label-'+(i+1)+'" placeholder="Enter label">';
+		    output_html +='<div id="subLabel-'+(i+1)+'"></div>';
 		output_html +='</div>';
-		
-		output_html +='<br/><label>Description</label>';
-		output_html +='<div class="fluid-container">';
-		output_html +='<input type="text" class="form-control" id="newLabel-'+(i+1)+'-5" placeholder="Enter Description">';
-		output_html +='</div>';
+	    output_html +='</div>';
+	    
+	    output_html +='<div class="col-md-6">';
+	    output_html +='<label>Type of value to be entered</label>';
+		output_html +='<select class="form-control" id="Stype-'+(i+1)+'">';
+		    output_html +='<option>ALPHA_NUMERIC_TYPE</option>';
+		    output_html +='<option>NUMERIC_TYPE</option>';
+		    output_html +='<option>ALPHA_TYPE</option>';
+		    output_html +='<option>PASSWORD_TYPE</option>';
+		    output_html +='<option>IP_TYPE</option>';
+		    output_html +='<option>MAC_TYPE</option>';
+		    output_html +='<option>MULTIPLE_IP_TYPE</option>';
+		    output_html +='<option>EMAIL_TYPE</option>';
+		    output_html +='<option>CUSTOM_TYPE</option>';
+		output_html +='</select>';	
+	    output_html +='<div id="subStype-'+(i+1)+'"></div>';
+	    output_html +='</div>';
+	    
+	    output_html +='<button class="pull-right" class="btn btn-primary panel-button btn-block" data-ng-click="addNewSubLabel('+(i+1)+')"><em class="glyphicon glyphicon-plus"></em></button>';
+	    output_html +='<br/><br/><br/>';
+	    
+	    
+	    output_html +='<br/><label>Standard label</label>';
+	    output_html +='<div class="fluid-container">';
+		output_html +='<input type="text" class="form-control" id="StdLabel-'+(i+1)+'" placeholder="Enter standard label">';
+	    output_html +='</div><br/>';
+	    
+	    output_html +='<label>Description</label>';
+	    output_html +='<div class="fluid-container">';
+		output_html +='<input type="text" class="form-control" id="Desc-'+(i+1)+'" placeholder="Enter Description">';
+	    output_html +='</div><br/>';
 
-		output_html +='<br/><label>To be filled during</label>';
-		output_html +='<div class="fluid-container">';
-		    output_html +='<select class="form-control" id="newLabel-'+(i+1)+'-6" >';
-			output_html +='<option>Addition of devices</option>';
-			output_html +='<option>Connection of devices</option>';
-		    output_html +='</select>';
-		output_html +='</div><br/>';
-		
-	    output_html +='</div><hr>';
-	}
+	    output_html +='<label>To be filled during</label>';
+	    output_html +='<div class="fluid-container">';
+		output_html +='<select class="form-control" id="Purpose-'+(i+1)+'" >';
+		    output_html +='<option>Addition of devices</option>';
+		    output_html +='<option>Connection of devices</option>';
+		output_html +='</select>';
+	    output_html +='</div><br/>';
+	    
+	output_html +='</div><hr>';
+	
 	var compiled_device_html = $compile(output_html)($scope);
-	    $('#labelSet').html(compiled_device_html);
+	    $('#labelSet').append(compiled_device_html);
     }
     
     $scope.registerNewDevice = function(){
@@ -262,6 +261,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	$scope.labels.splice(0,$scope.labels.length);
 	$scope.sublabels.splice(0,$scope.sublabels.length);
 	
+	//Generates the form containing just the device name with provision fr adding sublabels.
 	var output_html = "";
 	output_html +='<h2>Enter Device name</h2>';
 	output_html +='<form role="form">';
@@ -277,8 +277,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	var compiled_device_html = $compile(output_html)($scope);
 		$('#devices-holder').append(compiled_device_html);
 	$scope.addNewLabel();
-	
-   }
+    }
     
 //    $scope.showAddDeviceDialog = function (selectedDevice) {
 //	ngDialog.open({            
