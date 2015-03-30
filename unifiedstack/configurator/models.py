@@ -1,7 +1,7 @@
 from django.db import models
 
 class DeviceType(models.Model):
-    dname = models.CharField(max_length=50)
+    dname = models.CharField(max_length=50,unique = True)
     def __str__(self):
         return str(self.id) + ": "+ str(self.dname)
 #   A new device being added such as "Switch-nexus9K" which should be registred by the admin will be added to this.
