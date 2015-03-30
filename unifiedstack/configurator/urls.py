@@ -13,7 +13,7 @@ urlpatterns = patterns('',
                        url(r'^configurator/api/v1.0/saveconfiguration$', views.save_configuration),
                        url(r'^configurator/api/v1.0/savenewdevice$', views.save_new_device),
                        url(r'^configurator/api/v1.0/savenewdevicetype',views.add_to_device_type),
-                       url(r'^configurator/api/v1.0/savenewdevicetypesetting',views.add_to_device_type_setting),
+                       url(r'^configurator/api/v1.0/savenewdts',views.add_to_dts),
 
                        url(r'^configurator/sample$', views.sample),
                        #All above urls have been changed.

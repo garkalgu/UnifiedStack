@@ -159,6 +159,32 @@ def save_new_device(request):
     return JSONResponse("Success")
 
 @csrf_exempt
+def add_to_dts(request):
+    if(request.method == "POST"):
+        print "Inside post of Adding to DTS";
+        data = JSONParser().parse(request)
+        Level = data["level"];
+        print Level
+        DT = data["d_type"];
+        p = DeviceType.objects.get(dname=DT);
+        print p;
+        Stype = data["stype"];
+        print Stype
+        Label = data["label"];
+        print Label
+        Std_label = data["standard_label"];
+        print Std_label;
+        Desc = data["desc"];
+        print Desc
+        Purpose = data["dpurpose"];
+        print Purpose
+        DeviceTypeSetting(level = Level,d_type = p,stype = Stype,label = Label,standard_label = Std_label,desc = Desc,multiple = "True",dpurpose = Purpose).save();
+    else:
+        print "Some trouble adding to DTS";
+    return JSONResponse("Success")
+
+
+@csrf_exempt
 def add_to_device_type(request):
     if(request.method == "POST"):
         print "Adding a new device";
@@ -175,10 +201,6 @@ def sample(request):
     c["request"] = request
     context = RequestContext(request)
     return render_to_response("configurator/configurator_index.html", c, context_instance=RequestContext(request))
-
-@csrf_exempt
-def add_to_device_type_setting(request):
-    pass
 
 
 # ViewSets define the view behavior.
