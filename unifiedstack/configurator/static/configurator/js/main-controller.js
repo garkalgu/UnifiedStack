@@ -78,7 +78,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	DeviceTypeSetting.desc = ddesc;
 	DeviceTypeSetting.dpurpose = dpurpose;
 	DeviceTypeSetting.$save();
-	ngDialog.open({            
+	ngDialog.open({         
 	    template: '<center><div >' +
 			'<b "style="color:Green">Saved</b><br/>' +
 		      '</div></center>',
@@ -269,7 +269,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     $scope.addConnection = function(){
 	$('#devices-holder').empty();
 	var output_html = '';
-	output_html +='<h2>Enter Device title</h2>';
+	output_html +='<h2>Enter device details</h2>';
 	output_html +='<form role="form">';
 	output_html +='<div class="form-group">';
 	    output_html +='<label for="name">Device Title:</label>';
@@ -319,20 +319,20 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    output_html +='<h2>Enter the properties of the device</h2>';
 	    for(i=0;i<response.data.length;i++)
 	    {
-		//$window.alert(response.data[i].label);
-		output_html +='<div class="form-group">';
-		output_html +='<label >'+response.data[i].label+'</label>';
-		output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter '+response.data[i].label+'">';
-		output_html +='</div>';
+	    	if (angular.equals(response.data[i].dpurpose, "Addition of devices") || angular.equals(response.data[i].dpurpose, "AD")) {
+		    output_html +='<div class="form-group">';
+		    output_html +='<label>'+response.data[i].label+'</label>';
+		    output_html +='<input type="text" class="form-control" id="setting_dts-'+response.data[i].id+'" placeholder="Enter '+response.data[i].label+'">';
+		    output_html +='</div>';
+		}
 	    }
 	    output_html +='</div>';
-	    //$window.alert(output_html);
-	    output_html +='<button data-ng-click="registerToDB()" type="submit" class="btn btn-default">Submit</button></form>';
+	    output_html +='<button type="submit" class="btn btn-default">Submit</button></form>';
 	    var compiled_device_html = $compile(output_html)($scope);
 	    $('#DeviceTypeSetting').append(compiled_device_html);	    
 	})
 	.error(function(){
-	    $window.alert("Faliure");
+	    $window.alert("Failure");
 	});
     }
     
