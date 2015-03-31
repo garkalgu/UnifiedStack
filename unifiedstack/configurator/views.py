@@ -179,11 +179,11 @@ def add_to_dts(request):
         print Desc
         Purpose = data["dpurpose"];
         print Purpose
-        if(Label.find(";",0)):
+        if(Label.find("(") != -1):
             M=True
         else:
             M=False
-        DeviceTypeSetting(level = Level,d_type = p,stype = Stype,label = Label,standard_label = Std_label,desc = Desc,multiple = M,dpurpose = Purpose).save();
+        DeviceTypeSetting(level = Level, d_type = p, stype = Stype, label = Label, standard_label = Std_label, desc = Desc, multiple = M, dpurpose = Purpose).save();
     else:
         print "Some trouble adding to DTS";
     return JSONResponse("Success")
