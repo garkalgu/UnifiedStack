@@ -38,6 +38,7 @@ def device_type_settings_list(request, p_dtype):
     """ List all device settings provided by a particular dtype """
     if request.method == 'GET':
         device = DeviceType.objects.get(dname=p_dtype)
+        print device
         device_type_settings = DeviceTypeSetting.objects.filter(d_type=device)
         serializer = DeviceTypeSettingSerializer(device_type_settings, many=True)
         return JSONResponse(serializer.data)
@@ -178,7 +179,11 @@ def add_to_dts(request):
         print Desc
         Purpose = data["dpurpose"];
         print Purpose
-        DeviceTypeSetting(level = Level,d_type = p,stype = Stype,label = Label,standard_label = Std_label,desc = Desc,multiple = "True",dpurpose = Purpose).save();
+        if(Label.find(";",0)):
+            M=True
+        else:
+            M=False
+        DeviceTypeSetting(level = Level,d_type = p,stype = Stype,label = Label,standard_label = Std_label,desc = Desc,multiple = M,dpurpose = Purpose).save();
     else:
         print "Some trouble adding to DTS";
     return JSONResponse("Success")
