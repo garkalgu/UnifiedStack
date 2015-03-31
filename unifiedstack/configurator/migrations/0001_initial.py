@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             name='DeviceType',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('dname', models.CharField(max_length=50)),
+                ('dname', models.CharField(unique=True, max_length=50)),
             ],
             options={
             },
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('level', models.CharField(default=b'B', max_length=1, choices=[(b'M', b'Mandatory'), (b'B', b'Basic'), (b'O', b'Optional'), (b'A', b'Advanced')])),
-                ('stype', models.CharField(max_length=200)),
+                ('stype', models.CharField(default=b'AN', max_length=200, choices=[(b'A', b'Aphabetic'), (b'N', b'Numeric'), (b'AN', b'Alpha Numeric'), (b'P', b'Password'), (b'IP', b'IPv4 Address'), (b'MA', b'MAC Address'), (b'MI', b'Multiple IP Addresses'), (b'E', b'Email'), (b'CU', b'Custom')])),
                 ('label', models.CharField(max_length=200)),
                 ('standard_label', models.CharField(max_length=200)),
                 ('desc', models.CharField(default=b'', max_length=200, blank=True)),
