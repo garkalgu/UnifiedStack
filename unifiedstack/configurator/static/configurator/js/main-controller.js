@@ -45,34 +45,8 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	})
     };
     
-    
-//    $scope.addDeviceType = function(device_name,dlevel,dlabel,dstdlabel,ddesc,dpurpose,dsublabels){
-//	$window.alert("Trying to add to DeviceType!");
-//	var url = api_prefix + "configurator/api/v1.0/savenewdevicetype";
-//	if (dsublabels) {
-//	    dlabel +=dsublabels;
-//	}
-//	var Value = $resource(url,{});
-//	DeviceType = new Value();
-//	DeviceType.dname = device_name;
-//	DeviceType.$save(value , function(){
-//	    var url = api_prefix + "configurator/api/v1.0/savenewdevicetypesetting"
-//	    var DTS = $resource(url,{});
-//	    DeviceTypeSetting = new DTS();
-//	    DeviceTypeSetting.level = dlevel;
-//	    DeviceTypeSetting.d_type = value;
-//	    DeviceTypeSetting.stype = dstype;
-//	    DeviceTypeSetting.label = dlabel;
-//	    DeviceTypeSetting.standard_label = dstdlabel;
-//	    DeviceTypeSetting.desc = ddesc;
-//	    DeviceTypeSetting.dpurpose = dpurpose;
-//	    DeviceTypeSetting.$save();
-//	});
-//    }
-//    
-      
+    //Add dname to DeviceType and upon success add to DTS
     $scope.addDeviceToDB = function(device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels,dsubstypes){
-	$window.alert("Alerting now!");
 	var url = api_prefix + "configurator/api/v1.0/savenewdevicetype";
 	if (dsublabels) {
 	    dlabel +=dsublabels;
@@ -84,16 +58,17 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    DeviceType = new Value();
 	    DeviceType.dname = device_name;
 	    var p = DeviceType.$save()
-	    if (p)
-	    $scope.AddDTS(device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels);
+	    if (p){
+		$scope.AddDTS(device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels);
+	    }
 	}
     }
     
+    
+    //Get given instance of dname and add to DTS
     $scope.AddDTS = function (device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels){
-	$window.alert("Adding to DTS");
 	var url = api_prefix + "configurator/api/v1.0/savenewdts";
 	var DTS = $resource(url,{});
-	$window.alert("Got $resource");
 	DeviceTypeSetting = new DTS();
 	DeviceTypeSetting.level = dlevel;
 	DeviceTypeSetting.d_type = device_name;
@@ -103,9 +78,16 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	DeviceTypeSetting.desc = ddesc;
 	DeviceTypeSetting.dpurpose = dpurpose;
 	DeviceTypeSetting.$save();
+	ngDialog.open({            
+	    template: '<center><div >' +
+			'<b "style="color:Green">Saved</b><br/>' +
+		      '</div></center>',
+	    plain: true,
+	    scope:$scope
+	});
     }
     
-    
+    //Get parameters from form and call proper function on not empty
     $scope.registerToDB = function(){
 	var i;
 	for(i=0;i<$scope.labels.length;i++){
@@ -137,14 +119,15 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    len = substypes.length;
 	    substypes = substypes.substring(0,len-1);
 	    if (sublabels) {
+	        
 		sublabels +=')';
 		substypes +=')';
 	    }
-	//    $scope.addDeviceType(dname,dlevel,dlabel,dstdlabel,ddesc,dpurpose,sublabels);
 	    $scope.addDeviceToDB(dname,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,sublabels,substypes); 
 	}
     }
     
+    //Add new sublabel and also push to proper list.
     $scope.addNewSubLabel = function(k){
 	var l=0;
 	while(1){
@@ -156,12 +139,14 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    else
 	    l++;
 	}
+	
+	//code to add to sublabel
 	output_html = '';
 	output_html +='<input type="text" class="form-control" id="subLabel-'+temp+'" placeholder="Enter sub label">';
 	var compiled_device_html = $compile(output_html)($scope);
 	    $('#subLabel-'+k).append(compiled_device_html);
 	
-	
+	//code to add to substype
 	output_html = '';
 	output_html +='<select class="form-control" id ="subStype-'+temp+'">';
 	    output_html +='<option>ALPHA_NUMERIC_TYPE</option>';
@@ -175,11 +160,11 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    output_html +='<option>CUSTOM_TYPE</option>';
 	output_html +='</select>';
 	var compiled_device_html = $compile(output_html)($scope);
-	//$window.alert("subStype-"+k);
 	$('#subStype-'+k).append(compiled_device_html);
     
     }
     
+    //invoked upon clicking the '+' button on the glyphicon
     $scope.addNewLabel = function(){
 	//$scope.labels is a list for the number of lables for that particular div.It should be updated with consecutive numbers only.
 	var no_of_labels = $scope.labels.length;
@@ -256,6 +241,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    $('#labelSet').append(compiled_device_html);
     }
     
+    //Creates a new from to #devices-holder by creating a new form or devices and provisions for each label
     $scope.registerNewDevice = function(){
 	//To delete all values present in labels and sublabels list
 	$scope.labels.splice(0,$scope.labels.length);
@@ -279,23 +265,77 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	$scope.addNewLabel();
     }
     
-//    $scope.showAddDeviceDialog = function (selectedDevice) {
-//	ngDialog.open({            
-//	    template: '<center><div >' +
-//			'<b "style="color:Green">Add New '+ $scope.data.device_types[selectedDevice] + '</b><br/>' +
-//			'<table cellspacing:"10"><tr><th>' +
-//			'Title: </th> <td> <input type="text" ng-model="data.newdevice.title" /> </td></tr> <tr><th>' + 
-//			'Desc: </th> <td> <input type="text" ng-model="data.newdevice.desc"/> </td></tr> </table>' +
-//			'<button data-ng-click=addDevice("' + selectedDevice + '")>Add Device</button>' +
-//		      '</div></center>',
-//	    plain: true,
-//	    scope:$scope
-//	});
-//    } 
-//
-//    // Util function to help identify and breakdown compound settings
-//    // Plus store it into the $scope.devices[i].settings
-//    
+    
+    $scope.addConnection = function(){
+	$('#devices-holder').empty();
+	var output_html = '';
+	output_html +='<h2>Enter Device title</h2>';
+	output_html +='<form role="form">';
+	output_html +='<div class="form-group">';
+	    output_html +='<label for="name">Device Title:</label>';
+	    output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter Device Title">';
+	output_html +='</div>';
+	
+	output_html += '<div id="dtype-dropdown"></div>';
+	
+	output_html +='<div class="form-group">';
+	    output_html +='<label for="name">Device Description:</label>';
+	    output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter Device Description">';
+	output_html +='</div>';
+    
+	output_html +='<div id="DeviceTypeSetting">';
+	output_html +='</div>'	
+	
+	var compiled_device_html = $compile(output_html)($scope);
+		$('#devices-holder').append(compiled_device_html);
+	$scope.populatedropDown();
+    }
+    
+    $scope.populatedropDown = function(){
+	var url = api_prefix + "configurator/api/v1.0/dtl";
+	var output_html = '';
+	var Setting = $http.get(url)
+	.then(function(response){
+	    $scope.listOfOptions = response.data;
+	    output_html +='<label>Device Type:</label>';
+	    output_html +='<select class="form-control" ng-options="option for option in listOfOptions" ';
+	    output_html +='ng-model="selectedDeviceType" ng-change="fillOptions()">';
+	    output_html +='</select><br/>';
+	    var compiled_device_html = $compile(output_html)($scope);
+	    $('#dtype-dropdown').append(compiled_device_html);
+	})
+	.error(function(){
+	    $window.alert("Failed to get devices");
+	});
+    }
+    
+    $scope.fillOptions = function(){
+	var device = $scope.selectedDeviceType;
+	var url = api_prefix +"configurator/api/v1.0/dtsl/" +device;
+	var Setting = $http.get(url)
+	.then(function(response){
+	    $('#DeviceTypeSetting').empty();
+	    var output_html ='';
+	    output_html +='<h2>Enter the properties of the device</h2>';
+	    for(i=0;i<response.data.length;i++)
+	    {
+		//$window.alert(response.data[i].label);
+		output_html +='<div class="form-group">';
+		output_html +='<label >'+response.data[i].label+'</label>';
+		output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter '+response.data[i].label+'">';
+		output_html +='</div>';
+	    }
+	    output_html +='</div>';
+	    //$window.alert(output_html);
+	    output_html +='<button data-ng-click="registerToDB()" type="submit" class="btn btn-default">Submit</button></form>';
+	    var compiled_device_html = $compile(output_html)($scope);
+	    $('#DeviceTypeSetting').append(compiled_device_html);	    
+	})
+	.error(function(){
+	    $window.alert("Faliure");
+	});
+    }
+    
 //    $scope.addDeviceSetting = function(device_id, type_setting_id, label){
 //	$log.info("Adding a Setting");
 //	// Id to be placed in front of the 
@@ -361,7 +401,26 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 //	    }
 //	)
 //    }
+    
+//    $scope.showAddDeviceDialog = function (selectedDevice) {
+//	ngDialog.open({            
+//	    template: '<center><div >' +
+//			'<b "style="color:Green">Add New '+ $scope.data.device_types[selectedDevice] + '</b><br/>' +
+//			'<table cellspacing:"10"><tr><th>' +
+//			'Title: </th> <td> <input type="text" ng-model="data.newdevice.title" /> </td></tr> <tr><th>' + 
+//			'Desc: </th> <td> <input type="text" ng-model="data.newdevice.desc"/> </td></tr> </table>' +
+//			'<button data-ng-click=addDevice("' + selectedDevice + '")>Add Device</button>' +
+//		      '</div></center>',
+//	    plain: true,
+//	    scope:$scope
+//	});
+//    } 
 //
+//    // Util function to help identify and breakdown compound settings
+//    // Plus store it into the $scope.devices[i].settings
+//    
+    
+
 //    
 //    // Add all the Device Settings corresponding to a device
 //    $scope.addDeviceSettings = function(newDevice){
