@@ -98,7 +98,6 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    dstdlabel = document.getElementById('StdLabel-'+(i+1)).value;
 	    ddesc = document.getElementById('Desc-'+(i+1)).value;
 	    dpurpose = document.getElementById('Purpose-'+(i+1)).value;
-	    $window.alert("Getting all values!");
 	    var k=0;
 	    var temp = (i+1)+'-'+k;
 	    sublabels = '(';
@@ -123,10 +122,10 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 		sublabels +=')';
 		substypes +=')';
 	    }
-	    $scope.addDeviceToDB(dname,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,sublabels,substypes); 
+	    $scope.addDeviceToDB(dname,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,sublabels,substypes);
 	}
     }
-    
+
     //Add new sublabel and also push to proper list.
     $scope.addNewSubLabel = function(k){
 	var l=0;
@@ -310,6 +309,8 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     }
     
     $scope.fillOptions = function(){
+	$scope.labels.splice(0,$scope.labels.length);
+	$scope.sublabels.splice(0,$scope.sublabels.length);
 	var device = $scope.selectedDeviceType;
 	var url = api_prefix +"configurator/api/v1.0/dtsl/" +device;
 	var Setting = $http.get(url)
@@ -327,13 +328,17 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 		}
 	    }
 	    output_html +='</div>';
-	    output_html +='<button type="submit" class="btn btn-default">Submit</button></form>';
+	    output_html +='<button type="submit" ng-click="addConnection()" class="btn btn-default">Submit</button></form>';
 	    var compiled_device_html = $compile(output_html)($scope);
 	    $('#DeviceTypeSetting').append(compiled_device_html);	    
 	})
 	.error(function(){
 	    $window.alert("Failure");
 	});
+    }
+    
+    $scope.addConnection = function(){
+	
     }
     
 //    $scope.addDeviceSetting = function(device_id, type_setting_id, label){
