@@ -11,9 +11,11 @@ urlpatterns = patterns('',
                        url(r'^configurator/api/v1.0/dslist/(?P<dpk>[0-9]+)/$', views.device_settings_list),
                        url(r'^configurator/api/v1.0/configure$', views.configure_setup),
                        url(r'^configurator/api/v1.0/saveconfiguration$', views.save_configuration),
-                       url(r'^configurator/api/v1.0/savenewdevice$', views.save_new_device),
+                       #url(r'^configurator/api/v1.0/savenewdevice$', views.save_new_device),
                        url(r'^configurator/api/v1.0/savenewdevicetype',views.add_to_device_type),
                        url(r'^configurator/api/v1.0/savenewdts',views.add_to_dts),
+                       url(r'^configurator/api/v1.0/addtodb',views.add_to_db),
+                       url(r'^configurator/api/v1.0/savenewdevice',views.save_dev_setting),
 
                        url(r'^configurator/sample$', views.sample),
                        #All above urls have been changed.
