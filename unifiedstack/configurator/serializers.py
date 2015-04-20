@@ -5,7 +5,7 @@ from configurator.models import DeviceTypeSetting, DeviceType, Device, DeviceSet
 class DeviceTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DeviceType
-        fields = ('id','dname',)
+        fields = ('id','dname','if_device')
     
     
 class DeviceSettingSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,7 +25,7 @@ class DeviceTypeSettingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DeviceTypeSetting
         # fields = ('id', 'label', 'desc', 'stype', 'value', 'standard_label', 'setting_id', 'device_id', 'device_title', )
-        fields = ('id','Device_name', 'stype', 'label', 'desc', 'standard_label', 'level', 'multiple', 'setting_values','dpurpose')
+        fields = ('id','Device_name', 'stype', 'label', 'desc', 'standard_label', 'level', 'multiple', 'setting_values',)
 
 class DeviceSerializer(serializers.HyperlinkedModelSerializer):
     #logs = serializers.RelatedField(source='logs', many=True)
