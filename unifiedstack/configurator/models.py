@@ -2,6 +2,7 @@ from django.db import models
 
 class DeviceType(models.Model):
     dname = models.CharField(max_length=50,unique = True)
+    if_device = models.BooleanField()
     def __str__(self):
         return str(self.id) + ": "+ str(self.dname)
 #   A new device being added such as "Switch-nexus9K" which should be registred by the admin will be added to this.
@@ -41,14 +42,7 @@ class DeviceTypeSetting(models.Model):
         (EMAIL_TYPE, 'Email'),
         (CUSTOM_TYPE, 'Custom'),
     )
-    
-    ADDITION = 'AD'
-    CONNECTION = 'CO'
-    
-    PURPOSE_TYPE_CHOICES = (
-        (ADDITION, 'AD'),
-        (CONNECTION, 'CO'),
-    )
+
     level = models.CharField(max_length=1, choices=SETTING_LEVEL_CHOICES,
                                     default=BASIC_LEVEL)
     d_type = models.ForeignKey(DeviceType, related_name="device_type",default="")
@@ -57,7 +51,6 @@ class DeviceTypeSetting(models.Model):
     standard_label = models.CharField(max_length=200, blank=False)
     desc = models.CharField(max_length=200, blank=True, default="")
     multiple = models.BooleanField(default=False)
-    dpurpose = models.CharField(max_length=2, choices=PURPOSE_TYPE_CHOICES ,default=ADDITION)
     def __str__(self):
         return self.label + ": " + self.level + ": " + self.d_type
 #   The above DeviceTypeSetting model is used to store the TypeSetting of each device.Ex:"Hostname"(as label) can be stored for a switch
