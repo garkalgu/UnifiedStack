@@ -46,7 +46,9 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     };
     
     //Add dname to DeviceType and upon success add to DTS
-    $scope.addDeviceToDB = function(device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels,dsubstypes){
+//    		$scope.addDToDB(dname,	device,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,sublabels,substypes);
+    $scope.addDToDB = function(device_name,device,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels,dsubstypes){
+	$window.alert("AddDevicetoDB");
 	var url = api_prefix + "configurator/api/v1.0/savenewdevicetype";
 	if (dsublabels) {
 	    dlabel +=dsublabels;
@@ -57,6 +59,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    var Value = $resource(url,{});
 	    DeviceType = new Value();
 	    DeviceType.dname = device_name;
+	    DeviceType.check = device;
 	    var p = DeviceType.$save()
 	    if (p){
 		$scope.AddDTS(device_name,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,dsublabels);
@@ -92,13 +95,18 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	var i;
 	for(i=0;i<$scope.labels.length;i++){
 	    dname = document.getElementById('dname').value;
+	    check = document.getElementById('check').value;
+	    if (check=="on")
+	    device = "True";
+	    else
+	    device = "False";
 	    dlevel = document.getElementById('Level-'+(i+1)).value;
 	    dlabel = document.getElementById('Label-'+(i+1)).value;
 	    dstype = document.getElementById('Stype-'+(i+1)).value;
 	    dstdlabel = document.getElementById('StdLabel-'+(i+1)).value;
 	    ddesc = document.getElementById('Desc-'+(i+1)).value;
-	    dpurpose = document.getElementById('Purpose-'+(i+1)).value;
 	    var k=0;
+	    $window.alert(device);
 	    var temp = (i+1)+'-'+k;
 	    sublabels = '(';
 	    substypes = '(';
@@ -122,7 +130,8 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 		sublabels +=')';
 		substypes +=')';
 	    }
-	    $scope.addDeviceToDB(dname,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,sublabels,substypes);
+	    $window.alert("passing to addDeviceToDB");
+	    $scope.addDToDB(dname,device,dlevel,dlabel,dstype,dstdlabel,ddesc,dpurpose,sublabels,substypes);
 	}
     }
 
@@ -225,14 +234,6 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    output_html +='<div class="fluid-container">';
 		output_html +='<input type="text" class="form-control" id="Desc-'+(i+1)+'" placeholder="Enter Description">';
 	    output_html +='</div><br/>';
-
-	    output_html +='<label>To be filled during</label>';
-	    output_html +='<div class="fluid-container">';
-		output_html +='<select class="form-control" id="Purpose-'+(i+1)+'" >';
-		    output_html +='<option>Addition of devices</option>';
-		    output_html +='<option>Connection of devices</option>';
-		output_html +='</select>';
-	    output_html +='</div><br/>';
 	    
 	output_html +='</div><hr>';
 	
@@ -252,7 +253,8 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	output_html +='<form role="form">';
 	output_html +='<div class="form-group">';
 	    output_html +='<label for="name">Device Name:</label>';
-	    output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter Device name">';
+	    output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter Device name"><br/>';
+	    output_html +='<label><input type="checkbox" id="check"> Device</label>';
 	output_html +='</div>';
 	output_html +='<div id="labelSet"></div>';
 	$('#devices-holder').empty();
@@ -265,7 +267,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     }
     
     
-    $scope.addConnection = function(){
+    $scope.addNewConnection = function(){
 	$('#devices-holder').empty();
 	var output_html = '';
 	output_html +='<h2>Enter device details</h2>';
@@ -279,16 +281,16 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	
 	output_html +='<div class="form-group">';
 	    output_html +='<label for="name">Device Description:</label>';
-	    output_html +='<input type="text" class="form-control" id="dname" placeholder="Enter Device Description">';
+	    output_html +='<input type="text" class="form-control" id="ddesc" placeholder="Enter Device Description">';
 	output_html +='</div>';
-    
+	   
 	output_html +='<div id="DeviceTypeSetting">';
 	output_html +='</div>'	
 	
 	var compiled_device_html = $compile(output_html)($scope);
 		$('#devices-holder').append(compiled_device_html);
 	$scope.populatedropDown();
-    }
+    };
     
     $scope.populatedropDown = function(){
 	var url = api_prefix + "configurator/api/v1.0/dtl";
@@ -297,8 +299,8 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	.then(function(response){
 	    $scope.listOfOptions = response.data;
 	    output_html +='<label>Device Type:</label>';
-	    output_html +='<select class="form-control" ng-options="option for option in listOfOptions" ';
-	    output_html +='ng-model="selectedDeviceType" ng-change="fillOptions()">';
+	    output_html +='<select id="dtype" class="form-control" ng-options="option for option in listOfOptions" ';
+	    output_html +='ng-model="selectedDeviceType" ng-value=option ng-change="fillOptions()">';
 	    output_html +='</select><br/>';
 	    var compiled_device_html = $compile(output_html)($scope);
 	    $('#dtype-dropdown').append(compiled_device_html);
@@ -321,14 +323,16 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    for(i=0;i<response.data.length;i++)
 	    {
 	    	if (angular.equals(response.data[i].dpurpose, "Addition of devices") || angular.equals(response.data[i].dpurpose, "AD")) {
+		    $scope.labels.push(response.data[i].id);
 		    output_html +='<div class="form-group">';
 		    output_html +='<label>'+response.data[i].label+'</label>';
-		    output_html +='<input type="text" class="form-control" id="setting_dts-'+response.data[i].id+'" placeholder="Enter '+response.data[i].label+'">';
+		    output_html +='<input type="text" class="form-control" id="setting_dts-'+response.data[i].id+'" placeholder="Enter '+response.data[i].label+'" required>';
 		    output_html +='</div>';
+		    
 		}
 	    }
 	    output_html +='</div>';
-	    output_html +='<button type="submit" ng-click="addConnection()" class="btn btn-default">Submit</button></form>';
+	    output_html +='<button type="submit"  ng-click="addConnectionDB()" class="btn btn-default">Submit</button></form>';
 	    var compiled_device_html = $compile(output_html)($scope);
 	    $('#DeviceTypeSetting').append(compiled_device_html);	    
 	})
@@ -337,9 +341,52 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	});
     }
     
-    $scope.addConnection = function(){
-	
+    $scope.addConnectionDB = function(){
+	$window.alert("Adding to DB");
+	dTitle = document.getElementById('dname').value;
+	dType = $scope.selectedDeviceType;
+	ddesc = document.getElementById('ddesc').value;
+	$scope.addConnectionToDB_post(dTitle,dType,ddesc);
     }
+    
+    $scope.addConnectionToDB_post = function(name,type,ddesc){
+	var url = api_prefix + 'configurator/api/v1.0/addtodb';
+	var DTS = $resource(url,{});
+	DeviceTypeSetting = new DTS();
+	DeviceTypeSetting.title = name;
+	DeviceTypeSetting.d_type = type;
+	
+	DeviceTypeSetting.desc = ddesc;
+	var p = DeviceTypeSetting.$save();
+	if(p)
+	{
+	    var url = api_prefix + "configurator/api/v1.0/dtsl/" + type;
+	    $window.alert("Success saving!");
+	    $http.get(url).then(function (response){
+		var i;
+		for(i=0;i<response.data.length;i++)
+		{
+		    var id = response.data[i].id;
+		    var element = document.getElementById("setting_dts-"+id).value;
+		    var URL = api_prefix + "configurator/api/v1.0/savenewdevice";
+		    var DS = $resource(URL,{});
+		    var DeviceSetting = new DS();
+		    DeviceSetting.device = type;
+		    DeviceSetting.dtitle = name;
+		    DeviceSetting.dts_id = id;
+		    DeviceSetting.dts_value = element;
+		    DeviceSetting.$save();
+		    
+		}
+	    });
+	}
+    }
+    
+    $scope.connectTopology = function(){
+	$window.alert("Clicked connect!");
+	$('#devices-holder').empty();
+    }
+    
     
 //    $scope.addDeviceSetting = function(device_id, type_setting_id, label){
 //	$log.info("Adding a Setting");
