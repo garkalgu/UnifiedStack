@@ -143,18 +143,39 @@ def save_configuration(request):
                 print "Bad Setting"
     return JSONResponse("Success")
 
-#Have not chnaged this to V 2.0. Change accordingly when need arises
+##Have not chnaged this to V 2.0. Change accordingly when need arises
+#@csrf_exempt
+#def save_new_device(request):
+#    print "Saving new Device"
+#    if(request.method == "POST"):
+#        print "Post request to new Device"
+#        data = JSONParser().parse(request)
+#        D = data["dtype"]
+#        L = data["level"]
+#        STD = data["standard_label"]
+#        DESC = data["desc"]
+#        DeviceTypeSetting(level=L,dtype=D,label=L,standard_label=STD,desc=DESC,multiple="False").save();
+#    else:
+#        print "Bad DeviceTypesetting"
+#    return JSONResponse("Success")
+
+
 @csrf_exempt
-def save_new_device(request):
+def add_to_db(request):
     print "Saving new Device"
     if(request.method == "POST"):
         print "Post request to new Device"
         data = JSONParser().parse(request)
-        D = data["dtype"]
-        L = data["level"]
-        STD = data["standard_label"]
-        DESC = data["desc"]
-        DeviceTypeSetting(level=L,dtype=D,label=L,standard_label=STD,desc=DESC,multiple="False").save();
+        Title = data["title"];
+        print "Title is "+Title
+        d_type = data["d_type"];
+        dtype= d_type[0];
+        print dtype;
+        Desc = data["desc"]
+        print Desc
+        p = DeviceType.objects.get(dname=dtype);
+        print p;
+        Device(title = Title,d_type = p,desc = Desc).save();
     else:
         print "Bad DeviceTypesetting"
     return JSONResponse("Success")
@@ -195,10 +216,33 @@ def add_to_device_type(request):
         print "Adding a new device";
         data = JSONParser().parse(request);
         name = data["dname"];
-        DeviceType(dname=name).save();
+        check = data["check"];
+        DeviceType(dname=name,if_device=check).save();
     else:
         print "Some trouble adding new device";
     return JSONResponse("Success")
+
+@csrf_exempt
+def save_dev_setting(request):
+    print "Saving a device setting";
+    if(request.method=="POST"):
+        print "Adding a devie setting";
+        data = JSONParser().parse(request);
+        Dev = data["device"];
+        Devices = Dev[0];
+        print Devices;
+        DTS_id = data["dts_id"];
+        print DTS_id;
+        DTS_value = data["dts_value"];
+        print DTS_value;
+        Device_title = data["dtitle"];
+        print Device_title;
+        dtype = DeviceType.objects.get(dname=Devices);
+        print dtype;
+        device = Device.objects.get(title=Device_title,d_type=dtype);
+        print device;
+        DTS  = DeviceTypeSetting.objects.get(pk=DTS_id);
+        DeviceSetting(device=device,device_type_setting=DTS,value=DTS_value).save();
 
 
 def sample(request):
