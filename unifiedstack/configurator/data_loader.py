@@ -28,22 +28,22 @@ print "Clearing Completed!!!"
 # TODO: Some Settings will belong to more than one devices. Try to relate the fields for multiple devices.
 
 #DeviceType data creation
-DeviceTypeCobbler = DeviceType( dname = "COBBLER",)
+DeviceTypeCobbler = DeviceType( dname = "COBBLER",if_device = True)
 DeviceTypeCobbler.save()
 
-DeviceTypeForeman = DeviceType(dname = "FOREMAN",)
+DeviceTypeForeman = DeviceType(dname = "FOREMAN",if_device = True)
 DeviceTypeForeman.save()
 
-DeviceTypeGeneral = DeviceType(dname = "GENERAL",)
+DeviceTypeGeneral = DeviceType(dname = "GENERAL",if_device = False)
 DeviceTypeGeneral.save()
 
-DeviceTypePackstack = DeviceType(dname = "PACKSTACK",)
+DeviceTypePackstack = DeviceType(dname = "PACKSTACK",if_device = False)
 DeviceTypePackstack.save()
 
-DeviceTypeSwitch = DeviceType(dname = "SWITCH",)
+DeviceTypeSwitch = DeviceType(dname = "SWITCH",if_device = True)
 DeviceTypeSwitch.save()
 
-DeviceTypeFI = DeviceType(dname = "FI",)
+DeviceTypeFI = DeviceType(dname = "FI",if_device = True)
 DeviceTypeFI.save()
 
 #Device data creation
@@ -99,7 +99,7 @@ dts_Cobbler = DeviceTypeSetting(
                   standard_label="compute-host(host-name; ip-address; mac-address; interface-type; interface-name; profile)",
                   desc = "Compute hosts setting for cobbler. Could be also used by packstack",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -112,7 +112,7 @@ DeviceTypeSetting(
                   standard_label="network-host(host-name; ip-address; mac-address; interface-type; interface-name; profile)",
                   desc = "Network hosts setting for cobbler. Could be also used by packstack.",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 DeviceTypeSetting(
                   level = DeviceTypeSetting.BASIC_LEVEL,
@@ -124,7 +124,7 @@ DeviceTypeSetting(
                   standard_label="controller-host(host-name; ip-address; mac-address; interface-type; interface-name; profile)",
                   desc = "COntroller Host Setting.",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -135,7 +135,7 @@ DeviceTypeSetting(
                   standard_label="profile(profile-name; distro)",
                   desc = "Profile to be used by the Hosts.",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -146,7 +146,7 @@ DeviceTypeSetting(
                   standard_label="distro",
                   desc = "Name of the RHEL mirror",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -157,7 +157,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-interface",
                   desc = "Interface which cobbler should use for PXE booting",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -168,7 +168,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-server",
                   desc = "IP Address of the system on which cobbler should run",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -179,7 +179,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-next-server",
                   desc = "IP Address of the system if there is another cobbler server is in the network or same as above",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -190,7 +190,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-subnet",
                   desc = "IP address of the subnet in which cobbler should run",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -201,7 +201,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-netmask",
                   desc = "Network Mask of the subnet",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -212,7 +212,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-option-router",
                   desc = "Default Gateway IP address",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -223,7 +223,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-DNS",
                   desc = "Nameserver of the subnet",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -234,7 +234,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-hostname",
                   desc = "Hostname of the system on which cobbler should run",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -245,7 +245,7 @@ DeviceTypeSetting(
                   standard_label="cobbler-web(cobbler-web-username; cobbler-web-password",
                   desc = "Username and Password through which cobbler web will be accessed",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -257,7 +257,7 @@ DeviceTypeSetting(
                   standard_label="redhat-info(redhat-username; redhat-password; redhat-pool)",
                   desc = "Redhat account information through which system should be registered and sunscribed to redhat.",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -268,7 +268,7 @@ DeviceTypeSetting(
                   standard_label = "proxy(http-proxy-ip; https-proxy-ip; https-port)",
                   desc = "If the network has web proxy ",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 #2.General Section
@@ -280,7 +280,7 @@ DeviceTypeSetting(
                   standard_label = "name-server",
                   desc = "IP address of the Domain Name Server in the subnet",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -291,7 +291,7 @@ DeviceTypeSetting(
                   standard_label="enable-fi",
                   desc = "Checks whether to enable Fi or not",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -302,7 +302,7 @@ DeviceTypeSetting(
                   standard_label="host-ip-address",
                   desc = "IP address  of this system",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 DeviceTypeSetting(
                   level = DeviceTypeSetting.BASIC_LEVEL,
@@ -312,7 +312,7 @@ DeviceTypeSetting(
                   standard_label="host-password",
                   desc = "Password of this system",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -323,7 +323,7 @@ DeviceTypeSetting(
                   standard_label="rhel-image-url",
                   desc = "URL of the redhat enterprise linux 7 mirror ",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -334,7 +334,7 @@ DeviceTypeSetting(
                   standard_label="life-cycle-manager",
                   desc = "Life Cycle manager to be used. Either Foreman or Cobbler",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -345,7 +345,7 @@ DeviceTypeSetting(
                   standard_label="openstack-provisioner",
                   desc = "Specify the Openstack Provisioner to be used",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -359,7 +359,7 @@ DeviceTypeSetting(
                   standard_label="compute-host(host-name; ip-address; mac-address)",
                   desc = "Compute hosts setting for Foreman. Could be also used by packstack",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -371,7 +371,7 @@ DeviceTypeSetting(
                   standard_label="network-host(host-name; ip-address; mac-address)",
                   desc = "Network hosts setting for Foreman. Could be also used by packstack.",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -383,7 +383,7 @@ DeviceTypeSetting(
                   standard_label="controller-host(host-name; ip-address; mac-address)",
                   desc = "Controller Host setting.",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -394,7 +394,7 @@ DeviceTypeSetting(
                   standard_label="foreman-ip-address",
                   desc = "IP address of the foreman system",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 DeviceTypeSetting(
                   level = DeviceTypeSetting.BASIC_LEVEL,
@@ -404,7 +404,7 @@ DeviceTypeSetting(
                   standard_label="foreman-hostname",
                   desc = "IP address of the foreman system",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -416,7 +416,7 @@ DeviceTypeSetting(
                   standard_label="domain-name",
                   desc = "Domain Name",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -427,7 +427,7 @@ DeviceTypeSetting(
                   standard_label="DNS",
                   desc = "",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -438,7 +438,7 @@ DeviceTypeSetting(
                   standard_label="option-router",
                   desc = "IP address of the default gateway in the subnet",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -449,7 +449,7 @@ DeviceTypeSetting(
                   standard_label="netmask",
                   desc = "Network Mask of the subnet",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -460,7 +460,7 @@ DeviceTypeSetting(
                   standard_label="subnet",
                   desc = "IP Address of the subnet",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -472,7 +472,7 @@ DeviceTypeSetting(
                   standard_label="proxy(http-proxy-ip; https-proxy-ip; https-port)",
                   desc = "If the network has web proxy ",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -484,7 +484,7 @@ DeviceTypeSetting(
                   standard_label="redhat-info(redhat-username; redhat-password; redhat-pool)",
                   desc = "Redhat account information through which system should be registered and sunscribed to redhat.",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -497,7 +497,7 @@ DeviceTypeSetting(
                   standard_label="fi-mgmt-native-vlan",
                   desc = "Should management native vlan be true",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -508,7 +508,7 @@ DeviceTypeSetting(
                   standard_label="fi-cluster-ip-address",
                   desc = "IP Address of the Cluster",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -519,7 +519,7 @@ DeviceTypeSetting(
                   standard_label="fi-cluster-username",
                   desc = "Username of the FI Cluster",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -530,7 +530,7 @@ DeviceTypeSetting(
                   standard_label="fi-cluster-password",
                   desc = "Password of the FI Cluster",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -541,7 +541,7 @@ DeviceTypeSetting(
                   standard_label="fi-server-ports",
                   desc = "Comma Separated List of Ports",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -552,7 +552,7 @@ DeviceTypeSetting(
                   standard_label="fi-uplink-ports",
                   desc = "Comma Separated list of Uplink Ports ",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -563,7 +563,7 @@ DeviceTypeSetting(
                   standard_label="fi-slot(slot-id; slot-ports)",
                   desc = "Slot ID and comma separated list of ports associated with the slot id",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -575,7 +575,7 @@ DeviceTypeSetting(
                   standard_label="fi-uuid-pool(fi-uuid-pool-name; fi-uuid-pool-start; fi-uuid-pool-end)",
                   desc = "UUID Pool",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -587,7 +587,7 @@ DeviceTypeSetting(
                   standard_label="fi-mac-pool(fi-mac-pool-name; fi-mac-pool-start; fi-mac-pool-end)",
                   desc = "MAC Pool",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -600,7 +600,7 @@ DeviceTypeSetting(
                   standard_label="fi-ip-pool(fi-ip-pool-name; fi-ip-pool-start; fi-ip-pool-end; default-gateway; subnet)",
                   desc = "IP POOL",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -612,7 +612,7 @@ DeviceTypeSetting(
                   standard_label="fi-vnic(name; vlan-range-start;vlan-range-end)",
                   desc = "FI Virtual NIC name and vlan range associated with vnic",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -623,7 +623,7 @@ DeviceTypeSetting(
                   standard_label="fi-service-profile-name",
                   desc = "FI Service Profile Name",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()     
 DeviceTypeSetting(
                   level = DeviceTypeSetting.BASIC_LEVEL,
@@ -633,7 +633,7 @@ DeviceTypeSetting(
                   standard_label="fi-boot-policy-name",
                   desc = "FI Boot policy Name",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -644,7 +644,7 @@ DeviceTypeSetting(
                   standard_label="fi-boot-vnic",
                   desc = "FI Boot VNIC",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 #4.Packstack Section
@@ -656,7 +656,7 @@ DeviceTypeSetting(
                   standard_label="keystone-admin-pw",
                   desc = "Admin Password for the Keystone Service",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -667,7 +667,7 @@ DeviceTypeSetting(
                   standard_label="enable-openvswitch",
                   desc = "Enter True if OpenvSwitch is to be enabled else false",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -678,7 +678,7 @@ DeviceTypeSetting(
                   standard_label="enable-cisconexus",
                   desc = "Enter True if Cisco Nexus is to be enabled else fals",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -689,7 +689,7 @@ DeviceTypeSetting(
                   standard_label="vlan-mapping-ranges",
                   desc = "Enter the vlan mapping ranges. (start : end)",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -702,7 +702,7 @@ DeviceTypeSetting(
                   standard_label="switch-type",
                   desc = "Switch Type",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -713,7 +713,7 @@ DeviceTypeSetting(
                   standard_label="hostname",
                   desc = "Hostname of the switch",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 DeviceTypeSetting(
                   level = DeviceTypeSetting.BASIC_LEVEL,
@@ -723,7 +723,7 @@ DeviceTypeSetting(
                   standard_label="ip-address",
                   desc = "IP Address of the management interface",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 DeviceTypeSetting(
@@ -734,7 +734,7 @@ DeviceTypeSetting(
                   standard_label="username",
                   desc = "Username",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -746,7 +746,7 @@ DeviceTypeSetting(
                   standard_label="password",
                   desc = "password",
                   multiple = False,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -759,7 +759,7 @@ DeviceTypeSetting(
                   standard_label="vlan(id; ip; netmask)",
                   desc = "Vlan specific information",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -772,7 +772,7 @@ DeviceTypeSetting(
                   standard_label="interface(name; type; description; vlan)",
                   desc = "Information specific to the Interface. Vlan is comma separated list",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
 
 
@@ -784,5 +784,5 @@ DeviceTypeSetting(
                   standard_label="port-channel(number; interfaces)",
                   desc = "Port Channel Number and comma separated list of Interfaces associated with the port channel",
                   multiple = True,
-		  dpurpose = DeviceTypeSetting.ADDITION,
+		  
                   ).save()
