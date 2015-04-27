@@ -162,9 +162,9 @@ def save_configuration(request):
 
 @csrf_exempt
 def add_to_db(request):
-    print "Saving new Device"
+    print "Entering add_to_db"
     if(request.method == "POST"):
-        print "Post request to new Device"
+        print "POST request to add_to_db"
         data = JSONParser().parse(request)
         Title = data["title"];
         print "Title is "+Title
@@ -182,29 +182,28 @@ def add_to_db(request):
 
 @csrf_exempt
 def add_to_dts(request):
+    print "Adding DTS to database"
     if(request.method == "POST"):
-        print "Inside post of Adding to DTS";
-        data = JSONParser().parse(request)
+        print "POST request to add_to_dts";
+        data = JSONParser().parse(request);
         Level = data["level"];
-        print Level
+        print Level;
         DT = data["d_type"];
         p = DeviceType.objects.get(dname=DT);
         print p;
         Stype = data["stype"];
-        print Stype
+        print Stype;
         Label = data["label"];
-        print Label
+        print Label;
         Std_label = data["standard_label"];
         print Std_label;
         Desc = data["desc"];
-        print Desc
-        Purpose = data["dpurpose"];
-        print Purpose
+        print Desc;
         if(Label.find("(") != -1):
             M=True
         else:
             M=False
-        DeviceTypeSetting(level = Level, d_type = p, stype = Stype, label = Label, standard_label = Std_label, desc = Desc, multiple = M, dpurpose = Purpose).save();
+        DeviceTypeSetting(level = Level, d_type = p, stype = Stype, label = Label, standard_label = Std_label, desc = Desc, multiple = M).save();
     else:
         print "Some trouble adding to DTS";
     return JSONResponse("Success")
@@ -212,8 +211,9 @@ def add_to_dts(request):
 
 @csrf_exempt
 def add_to_device_type(request):
+    print "Entering to add_to_device_type"
     if(request.method == "POST"):
-        print "Adding a new device";
+        print "POST request in add_to_device_type";
         data = JSONParser().parse(request);
         name = data["dname"];
         check = data["check"];
@@ -243,7 +243,6 @@ def save_dev_setting(request):
         print device;
         DTS  = DeviceTypeSetting.objects.get(pk=DTS_id);
         DeviceSetting(device=device,device_type_setting=DTS,value=DTS_value).save();
-
 
 def sample(request):
     c = {}
