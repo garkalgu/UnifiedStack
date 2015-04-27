@@ -37,6 +37,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('dname', models.CharField(unique=True, max_length=50)),
+                ('if_device', models.BooleanField()),
             ],
             options={
             },
@@ -52,7 +53,6 @@ class Migration(migrations.Migration):
                 ('standard_label', models.CharField(max_length=200)),
                 ('desc', models.CharField(default=b'', max_length=200, blank=True)),
                 ('multiple', models.BooleanField(default=False)),
-                ('dpurpose', models.CharField(default=b'AD', max_length=2, choices=[(b'AD', b'AD'), (b'CO', b'CO')])),
                 ('d_type', models.ForeignKey(related_name=b'device_type', default=b'', to='configurator.DeviceType')),
             ],
             options={
