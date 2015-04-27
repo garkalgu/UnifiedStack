@@ -4,6 +4,9 @@ class DeviceType(models.Model):
     dname = models.CharField(max_length=50,unique = True)
     if_device = models.BooleanField()
     def __str__(self):
+        return unicode(self).encode('utf-8')
+
+    def __unicode__(self):
         return str(self.id) + ": "+ str(self.dname)
 #   A new device being added such as "Switch-nexus9K" which should be registred by the admin will be added to this.
 #   Other models reference from this model for the drop-down menu
@@ -52,7 +55,10 @@ class DeviceTypeSetting(models.Model):
     desc = models.CharField(max_length=200, blank=True, default="")
     multiple = models.BooleanField(default=False)
     def __str__(self):
-        return self.label + ": " + self.level + ": " + self.d_type
+        return unicode(self).encode('utf-8')
+
+    def __unicode__(self):
+        return self.label + ": " + self.level + ": " 
 #   The above DeviceTypeSetting model is used to store the TypeSetting of each device.Ex:"Hostname"(as label) can be stored for a switch
 #   with other fields in the model specifying info about the label.
 #   dpurpose is used to specify if the particular value is to be specified during addition of the device or during connection of the device(Step 2 or 3)
@@ -66,6 +72,8 @@ class Device(models.Model):
     d_type = models.ForeignKey(DeviceType, related_name="dev_type", default="")
     desc = models.CharField(max_length=200, blank=True)
     def __str__(self):
+        return unicode(self).encode('utf-8')
+    def __unicode__(self):
         return self.title + ":"  + ": " + self.desc
 #   A new device which will be added by the user will be added to this.
 
@@ -75,7 +83,7 @@ class DeviceSetting(models.Model):
     device_type_setting = models.ForeignKey(DeviceTypeSetting, related_name="values")
     value = models.CharField(max_length=200, blank=False)
     def __str__(self):
-        return str(self.device_type_setting) + ": " + self.value
+        return unicode(self).encode('utf-8')
     def __unicode__(self):
-        return unicode(self.value)
+        return str(self.device_type_setting) + ": " + self.value
 #   The value for each label specified in the DevicetypeSetting is stored for a corresponding entry in the DeviceTypeSetting and Device models.    
