@@ -233,8 +233,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	if (check == 1)
 	{
 	    $window.alert("Adding Interface details also");
-	    var str = "[DeviceTypeSetting.ALPHA_NUMERIC_TYPE,DeviceTypeSetting.ALPHA_NUMERIC_TYPE,DeviceTypeSetting.ALPHA_NUMERIC_TYPE,DeviceTypeSetting.ALPHA_NUMERIC_TYPE]"
-	    $scope.AddDTS(dname,'DeviceTypeSetting.BASIC_LEVEL','Interface (Name; Type; Description; Vlan)',str,'interface(name; type; description; vlan)','Information specific to the Interface. Vlan is comma separated list');
+	    $scope.AddDTS(dname,'DeviceTypeSetting.BASIC_LEVEL','Interface (Name; Type; Description; Vlan)','(AN;AN;AN;AN)','interface(name; type; description; vlan)','Information specific to the Interface. Vlan is comma separated list');
 	}
 	ngDialog.open({
 	    template: '<center><div >' +
@@ -289,14 +288,16 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 
     $scope.populatedropDown = function(str){
 	var url = api_prefix + "configurator/api/v1.0/dtl";
+	$window.alert(str);
 	var output_html = '';
 	var Setting = $http.get(url)
 	.then(function(response){
 	    $scope.listOfOptions = response.data;
 	    output_html +='<label>Device Type:</label>';
 	    output_html +='<select id="dtype" class="form-control" ng-options="option for option in listOfOptions" ';
-	    output_html +='ng-model="selectedDeviceType" ng-value=option ng-change="fillFormValues()">';
-	    output_html +='</select><br/>';
+	    output_html +='ng-model="selectedDeviceType" ng-value=option';
+	    output_html +='ng-change="fillFormValues()"';
+	    output_html +='></select><br/>';
 	    var compiled_device_html = $compile(output_html)($scope);
 	    $('#' + str).append(compiled_device_html);
 	})
@@ -306,9 +307,6 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     }
 
     $scope.fillFormValues = function(){
-	$scope.labels.splice(0,$scope.labels.length);
-	$scope.sublabels.splice(0,$scope.sublabels.length);
-	
 	var device = $scope.selectedDeviceType;
 	var url = api_prefix +"configurator/api/v1.0/dtsl/" + device;
 	var Setting = $http.get(url)
@@ -383,19 +381,44 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	$('#devices-holder').empty();
 	var output_html = '';
 	output_html +='<h2>Enter Device connection specifications</h2>';
-	output_html +='<form role="form">';
-	output_html +='<div class="form-group">';
-	output_html +='<div id="devices-list"></div>';
+	output_html +='<h3>The following device is</h3>';
+	output_html +='<form role="form" class="form-group">';
+
+	output_html +='<div id="devices-list-1"></div>';
+	output_html +='<div id="interface-options-1">';
+	    output_html += '';
 	output_html +='</div>';
-	output_html +='<button class="pull-right" class="btn btn-default" data-ng-click="addNewLabel()">Add New Label</button>';
-	output_html +='<button data-ng-click="registerToDB()" type="submit" class="btn btn-default">Submit</button></form>';
-	
+	output_html +='<h3> Connected to</h3>';
+	output_html +='<div id="devices-list-2"></div>';
+	output_html +='<div id="interface-options-2"></div>';
+	output_html +='<button data-ng-click="samplewarning()" type="submit" class="btn btn-default">Submit</button></form>';
 	var compiled_device_html = $compile(output_html)($scope);
 	$('#devices-holder').append(compiled_device_html);
-	$scope.populatedropDown("devices-list");
+	
+	var url = api_prefix + "configurator/api/v1.0/dtls";
+	var output_html = '';
+	output_html +='<select id="select-form" class="form-control" >';
+	var Setting = $http.get(url)
+	.then(function(response){
+	    for(var i=0;i<response.data.length;i++)
+	    if (response.data[i][1]==true) {
+		output_html +='<option>'+response.data[i][0]+'</option>'
+	    }
+	    output_html +='</select><br/>';
+	    var compiled_device_html = $compile(output_html)($scope);
+	    $('#devices-list-1').append(output_html);
+	    $('#devices-list-2').append(output_html);
+	})
+	.error(function(){
+	    $window.alert("Failed to get devices");
+	}); 
     }
     
-    
+    $scope.samplewarning = function(){
+	$('*[id*=select-form]:visible').each(function() {
+	    $window.alert(this.value);	
+	});
+    }
     
     
     
