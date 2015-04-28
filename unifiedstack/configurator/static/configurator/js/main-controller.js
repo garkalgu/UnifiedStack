@@ -386,11 +386,25 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 
 	output_html +='<div id="devices-list-1"></div>';
 	output_html +='<div id="interface-options-1">';
-	    output_html += '';
+	    output_html +='<div class="form-group">';
+	    output_html +='<label for="name">Interface Details:</label>';
+	    output_html +='<input type="text" class="form-control" id="iname1" placeholder="Enter Interface name">';
+	    output_html +='<input type="text" class="form-control" id="itype1" placeholder="Enter Interface Type">';
+	    output_html +='<input type="text" class="form-control" id="idesc1" placeholder="Enter Interface Description">';
+	    output_html +='<input type="text" class="form-control" id="ivlan1" placeholder="Enter Interface VLAN">';
+	    output_html +='</div>';
 	output_html +='</div>';
 	output_html +='<h3> Connected to</h3>';
 	output_html +='<div id="devices-list-2"></div>';
-	output_html +='<div id="interface-options-2"></div>';
+	output_html +='<div id="interface-options-2">';
+	    output_html +='<div class="form-group">';
+	    output_html +='<label for="name">Interface Details:</label>';
+	    output_html +='<input type="text" class="form-control" id="iname2" placeholder="Enter Interface name">';
+	    output_html +='<input type="text" class="form-control" id="itype2" placeholder="Enter Interface Type">';
+	    output_html +='<input type="text" class="form-control" id="idesc2" placeholder="Enter Interface Description">';
+	    output_html +='<input type="text" class="form-control" id="ivlan2" placeholder="Enter Interface VLAN">';
+	    output_html +='</div>';
+	output_html +='</div>';
 	output_html +='<button data-ng-click="samplewarning()" type="submit" class="btn btn-default">Submit</button></form>';
 	var compiled_device_html = $compile(output_html)($scope);
 	$('#devices-holder').append(compiled_device_html);
@@ -411,12 +425,14 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	})
 	.error(function(){
 	    $window.alert("Failed to get devices");
-	}); 
+	});
     }
     
     $scope.samplewarning = function(){
+	var count = 0;
 	$('*[id*=select-form]:visible').each(function() {
-	    $window.alert(this.value);	
+	    count++;
+	    
 	});
     }
     
