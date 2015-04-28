@@ -33,6 +33,12 @@ def device_type_list(request):
     if request.method == 'GET':
         devices = DeviceType.objects.values_list('dname')
         return JSONResponse(devices)
+    
+def device_type_list_all(request):
+    """ List all devices supported present in the data configuration as an array"""
+    if request.method == 'GET':
+        devices = DeviceType.objects.values_list('dname','if_device')
+        return JSONResponse(devices)
 
 def device_type_settings_list(request, p_dtype):
     """ List all device settings provided by a particular dtype """
