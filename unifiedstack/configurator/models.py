@@ -68,7 +68,7 @@ class DeviceTypeSetting(models.Model):
 #   value (rootuser;19.19.200.150;fun)
  
 class Device(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50,unique = True)
     d_type = models.ForeignKey(DeviceType, related_name="dev_type", default="")
     desc = models.CharField(max_length=200, blank=True)
     def __str__(self):
