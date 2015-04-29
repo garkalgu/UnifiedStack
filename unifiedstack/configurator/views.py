@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
+from django.core import serializers
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -37,7 +38,8 @@ def device_type_list(request):
 def device_type_list_all(request):
     """ List all devices supported present in the data configuration as an array"""
     if request.method == 'GET':
-        devices = DeviceType.objects.values_list('dname','if_device')
+        device = DeviceType.objects.all().filter(if_device="true")
+        devices = Device.objects.all().filter(d_type=device).values_list('title')
         return JSONResponse(devices)
 
 def device_type_settings_list(request, p_dtype):
@@ -249,6 +251,30 @@ def save_dev_setting(request):
         print device;
         DTS  = DeviceTypeSetting.objects.get(pk=DTS_id);
         DeviceSetting(device=device,device_type_setting=DTS,value=DTS_value).save();
+
+@csrf_exempt
+def connect(request):
+    print "Entering conncet"
+    if(request.method=="POST"):
+        print "POST request connect";
+        data = JSONParser().parse(request);
+        iname = data["iname"]
+        itype = data["itype"]
+        idesc = data["idesc"]
+        ivlan = data["ivlan"]
+        Title = data["title"]
+        Value = "("+iname+" ;"+itype+" ;"+idesc+" ;"+ivlan+")"
+        print Value
+        ddevice = Device.objects.get(title=Title)
+        print ddevice
+        Dname = ddevice.d_type.dname
+        print Dname
+        devicetype = DeviceType.objects.get(dname=Dname)
+        print devicetype
+        dts = DeviceTypeSetting.objects.get(d_type=devicetype,label="Interface (Name; Type; Description; Vlan)")
+        print dts
+        DeviceSetting(device = ddevice,device_type_setting = dts,value = Value).save()
+        print "Saved"
 
 def sample(request):
     c = {}
