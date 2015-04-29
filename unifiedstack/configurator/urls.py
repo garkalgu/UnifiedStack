@@ -3,7 +3,7 @@ from configurator import views
 
 urlpatterns = patterns('',
                        url(r'^configurator/api/v1.0/dtl$', views.device_type_list),
-                        url(r'^configurator/api/v1.0/dtls$', views.device_type_list_all), 
+                        url(r'^configurator/api/v1.0/dtitle$', views.device_type_list_all), 
                        url(r'^configurator/api/v1.0/dtsl/(?P<p_dtype>[A-Za-z0-9]+)/$', views.device_type_settings_list),
                        url(r'^configurator/api/v1.0/dtsget/(?P<dtsid>[0-9]+)/$', views.device_type_setting_get),
                        url(r'^configurator/api/v1.0/reload$', views.reload_configuration),
@@ -17,6 +17,7 @@ urlpatterns = patterns('',
                        url(r'^configurator/api/v1.0/savenewdts',views.add_to_dts),
                        url(r'^configurator/api/v1.0/addtodb',views.add_to_db),
                        url(r'^configurator/api/v1.0/savenewdevice',views.save_dev_setting),
+                       url(r'^configurator/api/v1.0/connect',views.connect),
 
                        url(r'^configurator/sample$', views.sample),
                        #All above urls have been changed.
