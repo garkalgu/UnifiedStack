@@ -370,7 +370,7 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 		      '</div></center>',
 	    plain: true,
 	    scope:$scope
-	});
+	    });
 	}
     }
     
@@ -405,19 +405,17 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    output_html +='<input type="text" class="form-control" id="ivlan2" placeholder="Enter Interface VLAN">';
 	    output_html +='</div>';
 	output_html +='</div>';
-	output_html +='<button data-ng-click="samplewarning()" type="submit" class="btn btn-default">Submit</button></form>';
+	output_html +='<button data-ng-click="submitdata()" type="submit" class="btn btn-default">Submit</button></form>';
 	var compiled_device_html = $compile(output_html)($scope);
 	$('#devices-holder').append(compiled_device_html);
 	
-	var url = api_prefix + "configurator/api/v1.0/dtls";
+	var url = api_prefix + "configurator/api/v1.0/dtitle";
 	var output_html = '';
 	output_html +='<select id="select-form" class="form-control" >';
 	var Setting = $http.get(url)
 	.then(function(response){
 	    for(var i=0;i<response.data.length;i++)
-	    if (response.data[i][1]==true) {
-		output_html +='<option>'+response.data[i][0]+'</option>'
-	    }
+		output_html +='<option>'+response.data[i]+'</option>'
 	    output_html +='</select><br/>';
 	    var compiled_device_html = $compile(output_html)($scope);
 	    $('#devices-list-1').append(output_html);
@@ -428,11 +426,30 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	});
     }
     
-    $scope.samplewarning = function(){
+    $scope.submitdata = function(){
 	var count = 0;
 	$('*[id*=select-form]:visible').each(function() {
 	    count++;
-	    
+	    var Name = document.getElementById('iname'+count).value;
+	    var Type = document.getElementById('itype'+count).value;
+	    var Desc = document.getElementById('idesc'+count).value;
+	    var VLAN = document.getElementById('ivlan'+count).value;
+	    var url = api_prefix + 'configurator/api/v1.0/connect'
+	    var Value = $resource(url,{});
+	    DeviceSetting = new Value();
+	    DeviceSetting.iname = Name;
+	    DeviceSetting.itype = Type;
+	    DeviceSetting.idesc = Desc;
+    	    DeviceSetting.ivlan = VLAN;
+	    DeviceSetting.title = this.value;
+	    var p = DeviceSetting.$save()
+	    ngDialog.open({
+	    template: '<center><div >' +
+			'<b "style="color:Green">Saved</b><br/>' +
+		      '</div></center>',
+	    plain: true,
+	    scope:$scope
+	    });
 	});
     }
     
