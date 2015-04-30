@@ -273,7 +273,7 @@ def connect(request):
         print devicetype
         dts = DeviceTypeSetting.objects.get(d_type=devicetype,label="Interface (Name; Type; Description; Vlan)")
         print dts
-        DeviceSetting(device = ddevice,device_type_setting = dts,value = Value).save()
+        p = DeviceSetting(device = ddevice,device_type_setting = dts,value = Value).save()
         print "Saved"
 
 def sample(request):
