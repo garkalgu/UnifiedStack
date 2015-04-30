@@ -390,7 +390,6 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    output_html +='<label for="name">Interface Details:</label>';
 	    output_html +='<input type="text" class="form-control" id="iname1" placeholder="Enter Interface name">';
 	    output_html +='<input type="text" class="form-control" id="itype1" placeholder="Enter Interface Type">';
-	    output_html +='<input type="text" class="form-control" id="idesc1" placeholder="Enter Interface Description">';
 	    output_html +='<input type="text" class="form-control" id="ivlan1" placeholder="Enter Interface VLAN">';
 	    output_html +='</div>';
 	output_html +='</div>';
@@ -401,7 +400,6 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
 	    output_html +='<label for="name">Interface Details:</label>';
 	    output_html +='<input type="text" class="form-control" id="iname2" placeholder="Enter Interface name">';
 	    output_html +='<input type="text" class="form-control" id="itype2" placeholder="Enter Interface Type">';
-	    output_html +='<input type="text" class="form-control" id="idesc2" placeholder="Enter Interface Description">';
 	    output_html +='<input type="text" class="form-control" id="ivlan2" placeholder="Enter Interface VLAN">';
 	    output_html +='</div>';
 	output_html +='</div>';
@@ -428,28 +426,48 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     
     $scope.submitdata = function(){
 	var count = 0;
+	$scope.Name_list = [];
+	$scope.Type_list = [];
+	$scope.VLAN_list = [];
+	$scope.title = [];
 	$('*[id*=select-form]:visible').each(function() {
 	    count++;
 	    var Name = document.getElementById('iname'+count).value;
 	    var Type = document.getElementById('itype'+count).value;
-	    var Desc = document.getElementById('idesc'+count).value;
 	    var VLAN = document.getElementById('ivlan'+count).value;
-	    var url = api_prefix + 'configurator/api/v1.0/connect'
-	    var Value = $resource(url,{});
-	    DeviceSetting = new Value();
-	    DeviceSetting.iname = Name;
-	    DeviceSetting.itype = Type;
-	    DeviceSetting.idesc = Desc;
-    	    DeviceSetting.ivlan = VLAN;
-	    DeviceSetting.title = this.value;
-	    var p = DeviceSetting.$save()
-	    ngDialog.open({
-	    template: '<center><div >' +
-			'<b "style="color:Green">Saved</b><br/>' +
-		      '</div></center>',
-	    plain: true,
-	    scope:$scope
-	    });
+	    $scope.Name_list.push(Name);
+	    $scope.Type_list.push(Type);
+	    $scope.VLAN_list.push(VLAN);
+	    $scope.title.push(this.value);
+	});
+
+	var url = api_prefix + 'configurator/api/v1.0/connect'
+	$window.alert(url);
+        var Value = $resource(url,{});
+	DeviceSetting = new Value();
+        DeviceSetting.iname = $scope.Name_list[0];
+	DeviceSetting.itype = $scope.Type_list[0];
+	DeviceSetting.ivlan = $scope.VLAN_list[0];
+	DeviceSetting.idesc = "Connected to (" + $scope.title[1] + ";" + $scope.Name_list[1] + ";" + $scope.Type_list[1] + ";" + $scope.VLAN_list[1] + ")";
+	DeviceSetting.title = $scope.title[0];
+        var p = DeviceSetting.$save();
+	
+	var url = api_prefix + 'configurator/api/v1.0/connect'
+        var Value = $resource(url,{});
+	DeviceSetting = new Value();
+        DeviceSetting.iname = $scope.Name_list[1];
+	DeviceSetting.itype = $scope.Type_list[1];
+	DeviceSetting.ivlan = $scope.VLAN_list[1];
+	DeviceSetting.idesc = "Connected to (" + $scope.title[0] + ";" + $scope.Name_list[0] + ";" + $scope.Type_list[0] + ";" + $scope.VLAN_list[0] + ")";
+	DeviceSetting.title = $scope.title[1];
+        var p = DeviceSetting.$save();
+	
+	ngDialog.open({
+	template: '<center><div >' +
+		'<b "style="color:Green">Saved</b><br/>' +
+	      '</div></center>',
+	plain: true,
+        scope:$scope
 	});
     }
     
@@ -467,273 +485,6 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     
     
     
-    
-//    $scope.addDeviceSetting = function(device_id, type_setting_id, label){
-//	$log.info("Adding a Setting");
-//	// Id to be placed in front of the 
-//	var type_setting_div_id = 'setting-'+ device_id + '-' + type_setting_id;
-//	var url = api_prefix + "configurator/api/v1.0/dslist/" + device_id;
-//	var Setting = $resource(url,{});
-//	var setting = new Setting();
-//	setting.device_id = device_id;
-//	setting.type_setting_id = type_setting_id;
-//	setting.value = " "
-//	//var newDevice = {}
-//	setting.$save(setting,
-//	    //success
-//	    function( value ){
-//		// Getting the id associated to
-//		// the newly added setting
-//		var newSetting = value;
-//		var setting_div_id = type_setting_div_id + '-' + newSetting.id;
-//		var setting_model = 'setting_'+ device_id + "_" +
-//				    type_setting_id + "_" + newSetting.id;
-//
-//		$log.info("DeviceSetting id: " + setting_div_id);
-//		device_html = '<div id="' + setting_div_id + '" class="setting">';
-//		
-//		var label_str = label.trim();
-//		var setting_html = ""
-//		if(label_str[label_str.length-1]==')'){
-//		    $log.info("Compound Setting: " + setting_div_id + ", " + label_str);
-//		    // Removing the last ')' character
-//		    label_str = label_str.substr(0, label_str.length-1);
-//		    // Seperating the compound setting main label with
-//		    // label tokens
-//		    var tokens = label_str.split('(');
-//		    var label_main = tokens[0].trim();
-//		    var label_tokens = tokens[1].split(';');
-//		    // device_html += '<label>' + label_main + '</label>';
-//		    for (var i=0; i<label_tokens.length; i++) {
-//			subsetting_model = setting_model + "_" + i;
-//			$log.info("Sub Field: " + label_tokens[i].trim() + "; Id: " + subsetting_model);
-//			device_html += '<input type"text" class="form-control" placeholder="' + label_tokens[i].trim() +
-//					'" ng-model="' + subsetting_model + '"/>'
-//			setting_html += '{{' + subsetting_model + '}};';
-//		    }	    
-//		} else{
-//		    $log.info("Simple  Setting: " + setting_div_id + ", " + label_str);
-//		    device_html += '<label style="float:left">' + label + '</label>';
-//		    device_html += '<input type="text" class="form-control" ng-model="'+ setting_model + '"/>';
-//		    setting_html += '{{' + setting_model + '}};';
-//		}
-//		if (setting_html.length>=1) { // Removing last semicolon from the set of values
-//		    setting_html = setting_html.substring(0, setting_html.length-1)
-//		}
-//		var compiled_device_html = $compile(device_html)($scope)
-//		$('#'+type_setting_div_id).append(compiled_device_html);
-//		//$scope.result_message = value;
-//		$scope.data.settings[setting_model] = $interpolate(setting_html);
-//		//newDevice.settings[setting_model] = setting_html;
-//		$log.info("Setting model assigned as: " + setting_html);
-//	    },
-//	    //error
-//	    function( error ){
-//		$window.alert("Some trouble adding setting");
-//	    }
-//	)
-//    }
-    
-//    $scope.showAddDeviceDialog = function (selectedDevice) {
-//	ngDialog.open({            
-//	    template: '<center><div >' +
-//			'<b "style="color:Green">Add New '+ $scope.data.device_types[selectedDevice] + '</b><br/>' +
-//			'<table cellspacing:"10"><tr><th>' +
-//			'Title: </th> <td> <input type="text" ng-model="data.newdevice.title" /> </td></tr> <tr><th>' + 
-//			'Desc: </th> <td> <input type="text" ng-model="data.newdevice.desc"/> </td></tr> </table>' +
-//			'<button data-ng-click=addDevice("' + selectedDevice + '")>Add Device</button>' +
-//		      '</div></center>',
-//	    plain: true,
-//	    scope:$scope
-//	});
-//    } 
-//
-//    // Util function to help identify and breakdown compound settings
-//    // Plus store it into the $scope.devices[i].settings
-//    
-    
-
-//    
-//    // Add all the Device Settings corresponding to a device
-//    $scope.addDeviceSettings = function(newDevice){
-//	// Displaying settings
-//	url = api_prefix + "configurator/api/v1.0/dtsl/" + newDevice.dtype;
-//	// $window.alert(url);
-//	$http.get(url).then(function (response) {
-//	    var device_type_settings = response.data;
-//	    for (var i=0; i<device_type_settings.length; i++){
-//		var type_setting_id = 'setting-'+ newDevice.id + '-' + device_type_settings[i].id;
-//		$log.info("Type Setting id: " + type_setting_id);
-//		var device_html = '<div id="' + type_setting_id + '" class="type-setting">';
-//		var label_str = device_type_settings[i].label.trim();
-//		if (device_type_settings[i].multiple==true) {
-//		    var device_html = '<div id="' + type_setting_id + '">';
-//		    /*
-//		    var device_html = '<div class="table-responsive">' +
-//			    '<table class="table table-bordered table-hover table-striped" id="' +
-//			    type_setting_id + '">';
-//		    */
-//		    $log.info(type_setting_id  + ": is multiple");
-//		    var tokens = device_type_settings[i].label.split('(');
-//		    var label_main = tokens[0].trim();
-//		    device_html += '<label>' + label_main + '</label>';
-//		    $log.log('"addDeviceSetting(' + newDevice.id + ', ' + device_type_settings[i].id +
-//				    ',\'' + device_type_settings[i].label + '\')"');
-//		    
-//		    device_html += '<div style="float:right"><a href="#" data-ng-click="addDeviceSetting(' + newDevice.id + ', ' + device_type_settings[i].id +
-//				    ',\'' + device_type_settings[i].label + '\')">Add One</a> | <a href="#" >Add More</a></div> <br/>';
-//		    device_html += '</div>';
-//		} else if(label_str[label_str.length - 1]==')'){
-//		    var tokens = device_type_settings[i].label.split('(');
-//		    var label_main = tokens[0].trim();
-//		    device_html += '<label>' + label_main + '</label>'
-//		} else{
-//		    $log.info(type_setting_id  + ": is not multiple");
-//		}
-//		device_html += '</div>'
-//		var compiled_device_html = $compile(device_html)($scope);
-//		$('#device-'+newDevice.id).append(compiled_device_html);
-//		$scope.addDeviceSetting(newDevice.id, device_type_settings[i].id,
-//					device_type_settings[i].label);
-//	    }
-//	})
-//    }
-//    
-//    // Adding a new device - Adds a new device to the database and displays the settings
-//    // it needs at the devices-holder
-//    $scope.addDevice = function(device_type){
-//	// Closing the dialog from showAddDeviceDialog
-//	ngDialog.close()
-//	
-//	// Adding device into database
-//	var url = api_prefix + "configurator/api/v1.0/dlist/"
-//	var Device = $resource(url,{});
-//	var device = new Device();
-//	device.dtype = device_type;
-//	device.title = $scope.data.newdevice.title;
-//	device.desc = $scope.data.newdevice.desc;
-//	//var newDevice = {}
-//	device.$save(device,
-//	    //success
-//	    function( value ){
-//		// Getting the id associated to
-//		// the newly added device
-//		$scope.data.newdevice = value;
-//		var device_html =
-//		    '<div id="device-'+ value.id + '">' +
-//			'<h2 style="padding-top:0px">'+ $scope.data.device_types[value.dtype] + " - " + value.title + '</h2>' + 				    
-//		    '</div>'
-//		$log.info("Device Added: " + device_html);
-//		var compiled_device_html = $compile(device_html)($scope)
-//		// Adding device template to the devices-holder
-//		$('#devices-holder').html(compiled_device_html);
-//		// $scope.data.devices.push(value.id);
-//    		$log.info("Device being added into scope: " + value.id );
-//		$scope.addDeviceSettings(value);
-//		$log.info("Device after adding Settings: " + value.settings)
-//		//$scope.result_message = value;
-//	    },
-//	    //error
-//	    function( error ){
-//		$window.alert("Some trouble adding device");
-//	    }
-//	)
-//    };
-//    
-//    $scope.loadExistingDeviceSetting = function(device, setting){
-//	var url = api_prefix + "configurator/api/v1.0/dtsget/" + setting.device_type_setting_id;
-//	$log.info("Existing device setting url: " + url);
-//	var device_div_id = "device-" + device.id;
-//	var type_setting_div_id = "setting-" + device.id + "-" + setting.device_type_setting_id;
-//	var setting_div_id = type_setting_div_id + "-" + setting.id;
-//	var setting_model = "setting_" + device.id + "_" + setting.device_type_setting_id + "_" + setting.id;
-//	$log.info(device_div_id + ", " + type_setting_div_id + ", " + setting_model);
-//	var device_html = "";
-//	
-//	$http.get(url).then(function (response) {
-//	    var type_setting = response.data;
-//	    $log.info("Label: " + type_setting.label );
-//	    
-//	    var label_str = type_setting.label.trim();
-//	    // If setting type is coming for the first-time
-//	    if( $('#'+type_setting_div_id).length == 0 ){
-//		device_html = '<div id="' + type_setting_div_id + '" class="type-setting">';
-//		if (type_setting.multiple==true) {
-//		    $log.info(type_setting_div_id  + ": is multiple");
-//		    var tokens = type_setting.label.split('(');
-//		    var label_main = tokens[0].trim();
-//		    device_html += '<label>' + label_main + '</label>';
-//		    $log.log('"addDeviceSetting(' + device.id + ', ' + type_setting.id +
-//				    ',\'' + type_setting.label + '\')"');
-//		    
-//		    device_html += '<div style="float:right"><a href="#" data-ng-click="addDeviceSetting(' + device.id + ', ' + type_setting.id +
-//				    ',\'' + type_setting.label + '\')">Add One</a> | <a href="#" >Add More</a></div> <br/>';
-//		} else if(label_str[label_str.length - 1]==')'){
-//		    var tokens = type_setting.label.split('(');
-//		    var label_main = tokens[0].trim();
-//		    device_html += '<label>' + label_main + '</label>'
-//		} else{
-//		    $log.info(type_setting_div_id  + ": is not multiple");
-//		}
-//		device_html += '</div>'
-//		var compiled_device_html = $compile(device_html)($scope);
-//		$('#'+device_div_id).append(compiled_device_html)
-//	    }
-//	    
-//	    device_html = '<div id="' + setting_div_id + '" class="setting">';
-//	    var setting_html = ""
-//	    if(label_str[label_str.length-1]==')'){
-//		$log.info("Compound Setting: " + setting_div_id + ", " + label_str);
-//		// Removing the last ')' character
-//		label_str = label_str.substr(0, label_str.length-1);
-//		// Seperating the compound setting main label with
-//		// label tokens
-//		var tokens = label_str.split('(');
-//		var label_main = tokens[0].trim();
-//		var label_tokens = tokens[1].split(';');
-//		var value_tokens = setting.value.trim().split(';');
-//		// device_html += '<label>' + label_main + '</label>';
-//		for (var i=0; i<label_tokens.length; i++) {
-//		    subsetting_model = setting_model + "_" + i;
-//		    $log.info("Sub Field: " + label_tokens[i].trim() + "; Id: " + subsetting_model);
-//		    device_html += '<input type"text" class="form-control" placeholder="' + label_tokens[i].trim() +
-//				    '" ng-model="' + subsetting_model + '"/>'
-//		    setting_html += '{{' + subsetting_model + '}};';
-//		    var subsetting_model_var = $parse(subsetting_model);
-//		    subsetting_model_var.assign($scope, value_tokens[i]);
-//		}	    
-//	    } else{
-//		$log.info("Simple  Setting: " + setting_div_id + ", " + label_str);
-//		device_html += '<label>' + label_str + '</label>';
-//		device_html += '<input type="text" class="form-control" ng-model="'+ setting_model + '"/>';
-//		setting_html += '{{' + setting_model + '}};';
-//		var setting_model_var = $parse(setting_model);
-//		setting_model_var.assign($scope, setting.value);
-//	    }
-//	    if (setting_html.length>=1) { // Removing last semicolon from the set of values
-//		setting_html = setting_html.substring(0, setting_html.length-1)
-//	    }
-//	    var compiled_device_html = $compile(device_html)($scope)
-//	    $('#'+type_setting_div_id).append(compiled_device_html);
-//	    //$scope.result_message = value;
-//	    $scope.data.settings[setting_model] = $interpolate(setting_html);
-//	})
-//
-//    };
-//    
-//    $scope.loadExistingDeviceSettings = function(device){
-//	var url = api_prefix + "configurator/api/v1.0/dslist/" + device.id;
-//	$http.get(url).then(function (response) {
-//	    var settings = response.data;
-//	    for (var i=0; i<settings.length; i++) {
-//		$log.info("Value: " + settings[i].value);
-//		$scope.loadExistingDeviceSetting(device, settings[i]);
-//	    }
-//	})
-//    };
-//    
-
-
     
     /* Clear all the settings. Useful while reloading existing settings. */
     $scope.clearSettings = function(){
@@ -886,76 +637,3 @@ app.controller("mainController", function($scope,$http,$window,$resource, $compi
     // $scope.addDevice('S');
     
 });
-
-
-
-/*
- * Adding Device Setting - deprecated code
-$scope.addDeviceSetting = function(newDevice, device_type_setting){
-	$log.info("Adding a Setting");
-	var type_setting_id = 'setting-'+ newDevice.id + '-' + device_type_setting.id;
-	
-	var url = api_prefix + "configurator/api/v1.0/dslist/" + newDevice.id;
-	var Setting = $resource(url,{});
-	var setting = new Setting();
-	setting.device_id = newDevice.id;
-	setting.type_setting_id = device_type_setting.id;
-	setting.value = " "
-	//var newDevice = {}
-	setting.$save(setting,
-	    //success
-	    function( value ){
-		// Getting the id associated to
-		// the newly added setting
-		var newSetting = value;
-		var setting_id = type_setting_id + '-' + newSetting.id;
-		var setting_model = 'setting_'+ newDevice.id + "_" +
-				    device_type_setting.id + "_" + newSetting.id;
-
-		$log.info("DeviceSetting id: " + setting_id);
-		device_html = '<div id="' + newSetting.id + '" class="setting">';
-		
-		var label_str = device_type_setting.label.trim();
-		var setting_html = ""
-		if(label_str[label_str.length-1]==')'){
-		    $log.info("Compound Setting: " + setting_id + ", " + label_str);
-		    // Removing the last ')' character
-		    label_str = label_str.substr(0, label_str.length-1);
-		    // Seperating the compound setting main label with
-		    // label tokens
-		    var tokens = label_str.split('(');
-		    var label_main = tokens[0].trim();
-		    var label_tokens = tokens[1].split(';');
-		    // device_html += '<label>' + label_main + '</label>';
-		    for (var i=0; i<label_tokens.length; i++) {
-			subsetting_model = setting_model + "_" + i;
-			$log.info("Sub Field: " + label_tokens[i].trim() + "; Id: " + subsetting_model);
-			device_html += '<input type"text" placeholder="' + label_tokens[i].trim() +
-					'" ng-model="' + subsetting_model + '"/>'
-			setting_html += '{{' + subsetting_model + '}};';
-		    }	    
-		} else{
-		    $log.info("Simple  Setting: " + setting_id + ", " + label_str);
-		    device_html += '<label>' + device_type_setting.label + '</label>';
-		    device_html += '<input type="text" ng-model="'+ setting_model + '"/><br/>';
-		    setting_html += '{{' + setting_model + '}};';
-		}
-		if (setting_html.length>=1) { // Removing last semicolon from the set of values
-		    setting_html = setting_html.substring(0, setting_html.length-1)
-		}
-		device_html += setting_html + "<br/>";
-		var compiled_device_html = $compile(device_html)($scope)
-		$('#'+type_setting_id).append(compiled_device_html);
-		//$scope.result_message = value;
-		$scope.data.settings[setting_model] = $interpolate(setting_html);
-		//newDevice.settings[setting_model] = setting_html;
-		$log.info("Setting model assigned as: " + setting_html);
-	    },
-	    //error
-	    function( error ){
-		$window.alert("Some trouble adding setting");
-	    }
-	)
-    }
-*/
-
